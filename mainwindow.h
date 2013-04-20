@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
 
 namespace Ui {
     class MainWindow;
@@ -16,12 +17,21 @@ public slots:
     void ustawMinWage(int wartosc);
     void ustawMaksWage(int wartosc);
 
+    void generujPlansze();
+    void graj() {}
+    void symuluj() {}
+    void nastepna() {}
+    void tabela() {}
+
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
+
+    int ilePlanet, minWaga, maksWaga;
+    QGraphicsScene *scena;
 };
 
 #endif // MAINWINDOW_H
