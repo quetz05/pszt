@@ -4,10 +4,20 @@
 #include "math.h"
 
 #define G 6.67384
+
+using namespace std;
+
+
 Symulation::Symulation()
 {
 }
-/// liczymy
+/**
+ * @brief Symulation::dvGrav
+ * @param p planeta ktora wytwaza pole grawitacyjne
+ * @param k kometa ktora jest w tym polu
+ * @param dt delta time
+ * @return
+ */
 Vector2 Symulation::dvGrav(Planeta p, Kometa k, double dt)
 {
     // a = (gm1/r2)*r->/r
@@ -23,7 +33,12 @@ Vector2 Symulation::dvGrav(Planeta p, Kometa k, double dt)
 }
 
 
-
+/**
+ * @brief Symulation::HitTest
+ * @param planet planeta z ktora mozna sie zdezyc
+ * @param player kometa ktora sterujemy
+ * @return true jezeli nastepuje zdezenie
+ */
 bool Symulation::HitTest(Planeta planet, Kometa player)
 {
     Vector2 pp=planet.zwrocSrodek();
@@ -35,4 +50,22 @@ bool Symulation::HitTest(Planeta planet, Kometa player)
     }
     return false;
 
+}
+/**
+ * @brief Symulation::krokSymulacji
+ * @param dt delta time
+ * @param k kometa do zmodyfikowania (poruszenia)
+ * @return zwraca false jezeli kometa z czyms sie zdezyla i ma zostac zniszczona
+ */
+bool Symulation::krokSymulacji(double dt, kometa &k)
+{
+    for(vector<planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
+        this->dvGrav(*it,k,dt);
+    }
+    // tu robimy set pozycja
+
+    for(vector<planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
+        if(this->HitTest(*it,k)) return false;
+    }
+    return true;
 }

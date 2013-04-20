@@ -9,6 +9,7 @@ class Kometa: public Planeta
 public:
     Kometa(Vector2 sr, Vector2 k);
     Vector2 zwrocKierunek(){return kierunek;}
+    void ustawPozycje(Vector2 p){this->srodek = Vector2;}
 
 private:
     Vector2 kierunek;
