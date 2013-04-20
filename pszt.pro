@@ -13,7 +13,8 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    planeta.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
