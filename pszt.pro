@@ -13,8 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    symulation.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
-    vector.h
+    vector.h \
+    symulation.h
