@@ -13,11 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    symulation.cpp \
+    planeta.cpp \
+    kometa.cpp \
+    vector.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
-    vector.h
+    vector.h \
+    symulation.h \
+    kometa.h
 
 FORMS += \
     mainwindow.ui
