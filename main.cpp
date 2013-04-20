@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 2; ++i) {
         //do nothing
+        while(999999999);
     }
     
     return a.exec();
