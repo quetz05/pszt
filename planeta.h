@@ -6,16 +6,12 @@
 
 class Planeta
 {
+   Planeta();
+   Planeta(Vector2 vec, double m);
 
-
-
-
-
-
-
-
-
-
+   double masa;
+   double promien;
+   Vector2 srodek;
 
 
 };

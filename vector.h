@@ -12,13 +12,13 @@ struct Vector2{
     Vector2 operator*(double val){return Vector2(x*val,y*val);}
     /** @brief operator/ przeciążenie operatora dzielenia wektora dwywymiarowego przez wartość*/
     Vector2 operator/(double val){return Vector2(x/val,y/val);}
-    /** @brief operator+ przeciążenie operatora dodawania wektora dwywymiarowego przez wartość*/
+    /** @brief operator+ przeciążenie operatora dodawania wartości do wektora dwywymiarowego*/
     Vector2 operator+(double val){return Vector2(x+val,y+val);}
-    /** @brief operator- przeciążenie operatora odejmowania wektora dwywymiarowego przez wartość*/
+    /** @brief operator- przeciążenie operatora odejmowania wartości od współrzęcnych wektora dwywymiarowego*/
     Vector2 operator-(double val){return Vector2(x-val,y-val);}
-
+    /** @brief operator+ przeciążenie operatora dodawania wektora dwywymiarowego do drugiego wektora*/
     Vector2 operator+(Vector2 vec) {return Vector2(x+vec.x, y+vec.y);}
-
+    /** @brief operator- przeciążenie operatora odejmowania wektora dwywymiarowego od drugiego wektora*/
     Vector2 operator-(Vector2 vec) {return Vector2(x-vec.x, y-vec.y);}
 
 
