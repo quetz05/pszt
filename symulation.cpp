@@ -29,6 +29,7 @@ Vector2 Symulation::dvGrav(Planeta p, Kometa k, double dt)
     Vector2 r = posPlaneta - posKometa;
     double rd = r.dlugosc();
     Vector2 dv = (r/rd) * (G*mPlaneta/rd*rd);
+    dv = dv*dt;
     return dv;
 }
 
@@ -66,8 +67,13 @@ bool Symulation::krokSymulacji(double dt, Kometa &k)
     // tu robimy set pozycja
     k.ustawKierunek(k.zwrocKierunek()+ dv);
     k.ustawPozycje(k.zwrocKierunek()*dt+k.zwrocSrodek());
+
     for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
+    if(k.zwrocSrodek().x<=0 || k.zwrocSrodek().x>=800)
+        { k.ustawKierunek(Vector2(k.zwrocKierunek().x*(-1),k.zwrocKierunek().y));}
+    if(k.zwrocSrodek().y<=0 || k.zwrocSrodek().y>=600)\
+        { k.ustawKierunek(Vector2(k.zwrocKierunek().x,k.zwrocKierunek().y*(-1)));}
     return true;
 }
