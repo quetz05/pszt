@@ -23,7 +23,8 @@ HEADERS  += mainwindow.h \
     planeta.h \
     vector.h \
     symulation.h \
-    kometa.h
+    kometa.h \
+    algorytm.h
 
 FORMS += \
     mainwindow.ui
