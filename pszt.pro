@@ -15,7 +15,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     planeta.cpp \
-    kometa.cpp
+    kometa.cpp \
+    vector.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
