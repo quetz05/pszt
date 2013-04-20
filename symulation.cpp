@@ -57,14 +57,14 @@ bool Symulation::HitTest(Planeta planet, Kometa player)
  * @param k kometa do zmodyfikowania (poruszenia)
  * @return zwraca false jezeli kometa z czyms sie zdezyla i ma zostac zniszczona
  */
-bool Symulation::krokSymulacji(double dt, kometa &k)
+bool Symulation::krokSymulacji(double dt, Kometa &k)
 {
-    for(vector<planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
+    for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         this->dvGrav(*it,k,dt);
     }
     // tu robimy set pozycja
 
-    for(vector<planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
+    for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
     return true;

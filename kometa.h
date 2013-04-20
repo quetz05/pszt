@@ -11,7 +11,7 @@ public:
     Kometa(){}
     Kometa(Vector2 sr, Vector2 k);
     Vector2 zwrocKierunek(){return kierunek;}
-    void ustawPozycje(Vector2 p){this->srodek = Vector2;}
+    void ustawPozycje(Vector2 p){this->srodek = p;}
 
 private:
     Vector2 kierunek;
