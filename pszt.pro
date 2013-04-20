@@ -25,3 +25,6 @@ HEADERS  += mainwindow.h \
     symulation.h \
     kometa.h \
     algorytm.h
+
+FORMS += \
+    mainwindow.ui

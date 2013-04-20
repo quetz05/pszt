@@ -3,7 +3,6 @@
 
 #include "vector.h"
 
-
 class Planeta
 {
 
@@ -15,7 +14,7 @@ public:
    const double zwrocMase(){return masa;}
 
 
-private:
+protected:
    //wartosc pola masa jest w istocie liczbą, która po przemnożeniu przez 10^24 daje faktyczną masę planety
    double masa;
    double promien;
@@ -23,7 +22,4 @@ private:
 
 
 };
-
-
-
-#endif // PLANETA_H
+#endif
