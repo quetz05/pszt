@@ -1,5 +1,8 @@
 #ifndef SYMULATION_H
 #define SYMULATION_H
+
+#include "planeta.h"
+#include "kometa.h"
 #include "vector.h"
 #include <vector>
 
@@ -10,12 +13,10 @@ private:
 public:
     Symulation();
 
+    std::vector <Planeta> planety;
 
 
-
-
-
-    Vector2 dvGrav(Planeta p, Kometa k,double dt);
+    Vector2 dvGrav(Planeta p, Kometa k, double dt);
     bool HitTest(Planeta p ,Kometa k);
     bool krokSymulacji (double dt, kometa k);
 };

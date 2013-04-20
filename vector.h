@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <qmath.h>
+
 /** @brief Vector2 struktura wektora dwuwymiarowego*/
 struct Vector2{
 
@@ -21,14 +23,11 @@ struct Vector2{
     /** @brief operator- przeciążenie operatora odejmowania wektora dwywymiarowego od drugiego wektora*/
     Vector2 operator-(Vector2 vec) {return Vector2(x-vec.x, y-vec.y);}
 
-    double dlugosc(){ return sqrt(x^2+y^2);}
+    double dlugosc(){ return qSqrt( (x*x) + (y*y) );}
 
-    Vector2& operator =(Vector3 const &vector){x = vector.x, y = vector.y;}
+    Vector2& operator=(Vector2 const &vector){x = vector.x; y = vector.y; return *this;}
 
-    bool operator ==( Vector3 const &vector);
-
-
-
+    bool operator==( Vector2 const &vector);
 
     /** @brief x współrzędna x wektora dwuwymiarowego*/
     double x;
