@@ -7,7 +7,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    float dziala;
-
     return a.exec();
 }
