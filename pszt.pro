@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     symulation.cpp \
     planeta.cpp \
     kometa.cpp \
-    vector.cpp
+    vector.cpp \
+    algorytm.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
