@@ -8,6 +8,7 @@ class Kometa: public Planeta
 
 public:
     Kometa(Vector2 sr, Vector2 k);
+    Vector2 zwrocKierunek(){return kierunek;}
 
 private:
     Vector2 kierunek;
