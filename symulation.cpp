@@ -59,11 +59,13 @@ bool Symulation::HitTest(Planeta planet, Kometa player)
  */
 bool Symulation::krokSymulacji(double dt, Kometa &k)
 {
+    Vector2 dv(0,0);
     for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
-        this->dvGrav(*it,k,dt);
+        dv=dv+this->dvGrav(*it,k,dt);
     }
     // tu robimy set pozycja
-
+    k.ustawKierunek(k.zwrocKierunek()+ dv);
+    k.ustawPozycje(k.zwrocKierunek()*dt+k.zwrocSrodek());
     for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
