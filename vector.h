@@ -21,6 +21,8 @@ struct Vector2{
     /** @brief operator- przeciążenie operatora odejmowania wektora dwywymiarowego od drugiego wektora*/
     Vector2 operator-(Vector2 vec) {return Vector2(x-vec.x, y-vec.y);}
 
+    double dlugosc(){ return sqrt(x^2+y^2);}
+
     Vector2& operator =(Vector3 const &vector){x = vector.x, y = vector.y;}
 
     bool operator ==( Vector3 const &vector);
