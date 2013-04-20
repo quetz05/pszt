@@ -14,12 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    symulation.cpp
+    symulation.cpp \
     planeta.cpp \
     kometa.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
     vector.h \
-    symulation.h
+    symulation.h \
     kometa.h
