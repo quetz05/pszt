@@ -2,6 +2,7 @@
 #include <QGlobal.h>
 #include <qmath.h>
 #include <time.h>
+#include <iostream>
 
 const double pi = 3.14159265358979323;
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
@@ -15,7 +16,7 @@ Populacja::Populacja()
 
     for(int i = 0; i<N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(0,800),losuj(0,600))));
+        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(0,100),losuj(0,100))));
 
         for(int j = 0; j<ARG; j++)
         {
@@ -47,7 +48,7 @@ void Populacja::krzyzowanie()
     Vector2 kier;
     vector <double> rozkl;
 
-    for(int i = 0; i < (sekwencjaRodzicow.size()-1); i++)
+    for(unsigned int i = 0; i < (sekwencjaRodzicow.size()-1); i++)
     {
         kier = (sekwencjaRodzicow[i]->zwrocKierunek()+sekwencjaRodzicow[i+1]->zwrocKierunek())/2;
         sr = (sekwencjaRodzicow[i]->zwrocSrodek()+sekwencjaRodzicow[i+1]->zwrocSrodek())/2;
@@ -66,20 +67,60 @@ void Populacja::krzyzowanie()
 }
 
 
-/*void Populacja::mutacja(int i)
+void Populacja::mutacja()
 {
-    double odchylenie;
-
-    vector
-
-    odchylenie = rozkladyZarodkow[i].
+    double xi = 0;
 
 
+    for(unsigned int i = 0; i<rozkladyZarodkow.size(); i++)
+    {
+       xi = rozkladNormalny(losuj(0,4));
+
+       double odch;
+       vector <double> rozk;
+
+       for(unsigned int j=0; j<rozkladyZarodkow[i].size(); j++)
+       {
+                 odch = rozkladyZarodkow[i][j]*qExp(tau2*xi + tau*rozkladNormalny(losuj(0,4)));
+                 rozk.push_back(odch);
+       }
+
+       noweRozklady.push_back(rozk);
+    }
+
+}
+
+void Populacja::tworzNowychOsobnikow()
+{
+
+    this->mutacja();
+
+    Vector2 kier;
+    Vector2 sr;
+
+    for(int i=0; i<N;i++)
+    {
+        sr.x = zarodki[i]->zwrocSrodek().x + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][0];
+        sr.y = zarodki[i]->zwrocSrodek().y + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][1];
+        kier.x = zarodki[i]->zwrocKierunek().x + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][2];
+        kier.y = zarodki[i]->zwrocKierunek().y + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][3];
+
+        nowiOsobnicy.push_back(new Kometa(sr, kier));
+    }
+}
 
 
+void Populacja::tworzNowaPopulacje()
+{
+    osobniki.clear();
+    rozklady.clear();
 
-}*/
-
+    for(int i = 0; i<N; i++)
+    {
+        osobniki.push_back(nowiOsobnicy[i]);
+        rozklady.push_back(noweRozklady[i]);
+    }
+}
 
 double Populacja::losuj(double a, int b)
 {
