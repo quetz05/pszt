@@ -14,6 +14,6 @@ void Kometa::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-
-
+    painter->setBrush(QBrush(QColor::fromRgb(0xcc, 0x67, 0x33)));
+    painter->drawEllipse(QPointF(srodek.x, srodek.y), promien, promien);
 }

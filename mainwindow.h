@@ -19,7 +19,7 @@ public slots:
     void ustawMaksWage(int wartosc);
 
     void generujPlansze();
-    void graj() {}
+    void graj();
     void symuluj() {}
     void nastepna() {}
     void tabela() {}
@@ -32,7 +32,7 @@ private:
     Ui::MainWindow *ui;
 
     int ilePlanet, minWaga, maksWaga;
-    KometaScene *scena;
+    QGraphicsScene *scena;
 };
 
 #endif // MAINWINDOW_H

@@ -14,7 +14,7 @@
    <string>Ewolucyjna Kometa - PSZT : Kaczor, Domagała, Łopusiński</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="rysownik">
+   <widget class="KometaScene" name="rysownik">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -324,6 +324,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KometaScene</class>
+   <extends>QGraphicsView</extends>
+   <header>kometascene.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
