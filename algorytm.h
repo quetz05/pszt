@@ -23,6 +23,26 @@ public:
     //rozklady osobników
     vector <vector<double>> rozklady;
 
+
+
+    vector <Kometa*> nowiOsobnicy;
+    vector <vector<double>> noweRozklady;
+
+
+
+    //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
+    void tworzSekwencje();
+    //krzyżuje osobniki z sekwencji, tworząc zarodki
+    void krzyzowanie();
+
+    //towrzy nowych osobników na podstawie rozkładów
+    void tworzNowychOsobnikow();
+    //tworzy nowa populacje
+    void tworzNowaPopulacje();
+
+
+private:
+
     //sekwencja rodziców do rozmnażania
     vector <Kometa*> sekwencjaRodzicow;
     //rozklady osobników
@@ -33,23 +53,15 @@ public:
     //rozklady osobników
     vector <vector<double>> rozkladyZarodkow;
 
-
-
-
-    //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
-    void tworzSekwencje();
-    //krzyżuje osobniki z sekwencji, tworząc zarodki
-    void krzyzowanie();
-    //mutuje zarodki tworząc nowe osobniki
+    //mutuje zarodek tworząc nowe rozklady
     void mutacja();
-
 
     //metoda losująca liczbę z przedziału <a,b>
     static double losuj(double a, int b);
     //metoda zwracająca liczbę z rozkładu normalnego dla danego x
     static double rozkladNormalny(int x);
 
-private:
+
 
 };
 
