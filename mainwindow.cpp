@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QDebug>
-#include <QGraphicsEllipseItem>
+#include "planeta.h"
+#include <QGraphicsLineItem>
 #include <time.h>
+#include "kometascene.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -17,8 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->maksWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMaksWage(int)));
     connect(ui->guzikGeneruj, SIGNAL(clicked()), this, SLOT(generujPlansze()));
 
-    scena = new QGraphicsScene(0, 0, 800, 600);
+    scena = new KometaScene(0, 0, 800, 600);
     ui->rysownik->setScene(scena);
+    ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
 }
 
@@ -54,7 +57,14 @@ void MainWindow::generujPlansze()
         return;
     }
 
-    QGraphicsEllipseItem *kolo;
+    scena->clear();
+
+    scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, -1, -1, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(801, -1, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, 601, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+
+    Planeta *kolo = NULL;
     qreal prom;
     qreal masa;
     qreal x, y;
@@ -62,15 +72,18 @@ void MainWindow::generujPlansze()
 
     for (int i = 0; i < ilePlanet; ++i) {
 
-        masa = ( rand() % (maksWaga - minWaga) ) + minWaga;
-        prom = 5 + 0.5 * masa;
-        x = ( rand() % (int)(800 - 2*prom) );
-        y = ( rand() % (int)(600 - 2*prom) );
+        do {
+            masa = ( rand() % ((maksWaga + 1) - minWaga) ) + minWaga;
+            prom = 5 + 0.5 * masa;
+            x = ( rand() % (int)(800 - 2*prom) );
+            y = ( rand() % (int)(600 - 2*prom) );
 
-        qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
+            qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
 
-        kolo = new QGraphicsEllipseItem(x, y, 2*prom, 2*prom);
-        kolo->setBrush(QBrush(QColor::fromRgb(0x33, 0x66, 0xff)));
+            kolo = new Planeta(Vector2(x, y), masa);
+
+        } while (scena->collidingItems(kolo).count());
+
         scena->addItem(kolo);
     }
 }

@@ -9,16 +9,13 @@
 class Symulation
 {
 private:
-    std::vector <Planeta> planety;
+    std::vector <Planeta*> planety;
 public:
     Symulation();
 
-
-
-
-    Vector2 dvGrav(Planeta p, Kometa k, double dt);
-    bool HitTest(Planeta p ,Kometa k);
-    bool krokSymulacji (double dt,Kometa &k);
+    Vector2 dvGrav(Planeta *p, Kometa *k, double dt);
+    bool HitTest(Planeta *p ,Kometa *k);
+    bool krokSymulacji(double dt, Kometa *k);
 };
 
 #endif // SYMULATION_H

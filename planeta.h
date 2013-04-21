@@ -2,8 +2,9 @@
 #define PLANETA_H
 
 #include "vector.h"
+#include <QGraphicsItem>
 
-class Planeta
+class Planeta : public QGraphicsItem
 {
 
 public:
@@ -12,6 +13,9 @@ public:
    const double zwrocPromien(){return promien;}
    const Vector2 zwrocSrodek(){return srodek;}
    const double zwrocMase(){return masa;}
+
+   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+   QRectF boundingRect() const;
 
 
 protected:

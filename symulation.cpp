@@ -18,14 +18,14 @@ Symulation::Symulation()
  * @param dt delta time
  * @return
  */
-Vector2 Symulation::dvGrav(Planeta p, Kometa k, double dt)
+Vector2 Symulation::dvGrav(Planeta *p, Kometa *k, double dt)
 {
     // a = (gm1/r2)*r->/r
     // a = dv/dt
     // dv = a*dt
-    Vector2 posPlaneta= p.zwrocSrodek();
-    double mPlaneta = p.zwrocMase();
-    Vector2 posKometa = k.zwrocSrodek();
+    Vector2 posPlaneta= p->zwrocSrodek();
+    double mPlaneta = p->zwrocMase();
+    Vector2 posKometa = k->zwrocSrodek();
     Vector2 r = posPlaneta - posKometa;
     double rd = r.dlugosc();
     Vector2 dv = (r/rd) * (G*mPlaneta/rd*rd);
@@ -40,13 +40,13 @@ Vector2 Symulation::dvGrav(Planeta p, Kometa k, double dt)
  * @param player kometa ktora sterujemy
  * @return true jezeli nastepuje zdezenie
  */
-bool Symulation::HitTest(Planeta planet, Kometa player)
+bool Symulation::HitTest(Planeta *planet, Kometa *player)
 {
-    Vector2 pp = planet.zwrocSrodek();
-    Vector2 pk = player.zwrocSrodek();
+    Vector2 pp = planet->zwrocSrodek();
+    Vector2 pk = player->zwrocSrodek();
     double rd = (pp-pk).dlugosc();
     rd = fabs(rd);
-    if (rd < (planet.zwrocPromien() + player.zwrocPromien())){
+    if (rd < (planet->zwrocPromien() + player->zwrocPromien())){
         return true;
     }
     return false;
@@ -58,22 +58,26 @@ bool Symulation::HitTest(Planeta planet, Kometa player)
  * @param k kometa do zmodyfikowania (poruszenia)
  * @return zwraca false jezeli kometa z czyms sie zdezyla i ma zostac zniszczona
  */
-bool Symulation::krokSymulacji(double dt, Kometa &k)
+bool Symulation::krokSymulacji(double dt, Kometa *k)
 {
     Vector2 dv(0,0);
-    for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
-        dv=dv+this->dvGrav(*it,k,dt);
-    }
-    // tu robimy set pozycja
-    k.ustawKierunek(k.zwrocKierunek()+ dv);
-    k.ustawPozycje(k.zwrocKierunek()*dt+k.zwrocSrodek());
 
-    for(vector<Planeta>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
+    for(vector<Planeta*>::iterator it = this->planety.begin(); it != planety.end(); ++it){
+        dv = dv + this->dvGrav(*it, k, dt);
+    }
+
+    // tu robimy set pozycja
+    k->ustawKierunek(k->zwrocKierunek() + dv);
+    k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
+
+    for(vector<Planeta*>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
-    if(k.zwrocSrodek().x<=0 || k.zwrocSrodek().x>=800)
-        { k.ustawKierunek(Vector2(k.zwrocKierunek().x*(-1),k.zwrocKierunek().y));}
-    if(k.zwrocSrodek().y<=0 || k.zwrocSrodek().y>=600)\
-        { k.ustawKierunek(Vector2(k.zwrocKierunek().x,k.zwrocKierunek().y*(-1)));}
+    if(k->zwrocSrodek().x <= 0 || k->zwrocSrodek().x >= 800)
+        k->ustawKierunek( Vector2( k->zwrocKierunek().x * (-1), k->zwrocKierunek().y) );
+
+    if(k->zwrocSrodek().y <= 0 || k->zwrocSrodek().y >= 600)
+        k->ustawKierunek( Vector2( k->zwrocKierunek().x, k->zwrocKierunek().y * (-1) ) );
+
     return true;
 }

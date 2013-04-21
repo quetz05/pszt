@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include "kometascene.h"
 
 namespace Ui {
     class MainWindow;
@@ -31,7 +32,7 @@ private:
     Ui::MainWindow *ui;
 
     int ilePlanet, minWaga, maksWaga;
-    QGraphicsScene *scena;
+    KometaScene *scena;
 };
 
 #endif // MAINWINDOW_H

@@ -8,21 +8,20 @@
 
 using namespace std;
 
-
 class Algorytm
 {
 
 private:
-    vector <Kometa> osobniki;
+    vector <Kometa*> osobniki;
     vector <double> rozklady;
 
 
-    Kometa reprodukcja(Kometa os1, Kometa os2);
+    Kometa* reprodukcja(Kometa *os1, Kometa *os2);
     double liczRozklad();
 
 private:
-    static double tau = 1/(qSqrt(2*qSqrt(N)));
-    static double tau2 = 1/(qSqrt(2N));
+    static double tau;
+    static double tau2;
 
 };
 
