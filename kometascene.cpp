@@ -11,8 +11,6 @@ void KometaScene::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
     if (trybGry) {
 
-        qDebug() << "trybGry";
-        qDebug() << mouseEvent->pos().x() << " :: " <<  mouseEvent->pos().y();
         QPointF punkt = mapToScene(mouseEvent->pos().x() , mouseEvent->pos().y());
 
         gracz->ustawPozycje(Vector2(punkt.x(), punkt.y()));

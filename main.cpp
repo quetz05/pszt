@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
     alg.tworzNowychOsobnikow();
     alg.tworzNowaPopulacje();
 
-    for(unsigned int j = 0; j < alg.osobniki.size() ;j++ )
+    for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
     {
-        cout<<alg.osobniki[j]->zwrocKierunek().x<<" ";
-        cout<<alg.osobniki[j]->zwrocKierunek().y<<endl;
+        cout<<alg.osobniki[i]->zwrocKierunek().x<<" ";
+        cout<<alg.osobniki[i]->zwrocKierunek().y<<endl;
         for(int j = 0; j<ARG; j++)
             cout<<alg.rozklady[i][j]<<" ";
         cout<<endl;
