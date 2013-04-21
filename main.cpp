@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     Populacja alg;
 
-    for(int i = 0; i < alg.osobniki.size() ;i++ )
+    for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
     {
         cout<<alg.osobniki[i]->zwrocKierunek().x<<" ";
         cout<<alg.osobniki[i]->zwrocKierunek().y<<" ";
