@@ -18,8 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
     connect(ui->maksWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMaksWage(int)));
     connect(ui->guzikGeneruj, SIGNAL(clicked()), this, SLOT(generujPlansze()));
+    connect(ui->guzikGraj, SIGNAL(clicked()), this, SLOT(graj()));
 
-    scena = new KometaScene(0, 0, 800, 600);
+    this->setMouseTracking(true);
+    ui->centralwidget->setMouseTracking(true);
+
+    scena = new QGraphicsScene(0, 0, 800, 600);
     ui->rysownik->setScene(scena);
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
@@ -86,4 +90,12 @@ void MainWindow::generujPlansze()
 
         scena->addItem(kolo);
     }
+}
+
+void MainWindow::graj()
+{
+    Kometa *gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
+    scena->addItem(gracz);
+    ui->rysownik->przypiszGracz(gracz);
+    ui->rysownik->ustawTrybGry(true);
 }
