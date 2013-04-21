@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1050</width>
-    <height>600</height>
+    <width>1100</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>800</width>
-      <height>600</height>
+      <width>851</width>
+      <height>651</height>
      </rect>
     </property>
     <property name="backgroundBrush">
@@ -36,7 +36,7 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>850</x>
       <y>0</y>
       <width>251</width>
       <height>601</height>
@@ -176,7 +176,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string/>
+            <string>1</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -218,7 +218,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>x 10 ^ 24 kg</string>
+            <string>1 x 10 &lt;sup&gt;24 &lt;/sup&gt; kg</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -263,7 +263,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>x 10 ^ 24 kg</string>
+            <string>1 x 10 &lt;sup&gt; 24 &lt;/sup&gt; kg</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -325,22 +325,5 @@
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>liczbaPlanet</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>raise()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>925</x>
-     <y>186</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>524</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

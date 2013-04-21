@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     planeta.cpp \
     kometa.cpp \
     vector.cpp \
-    algorytm.cpp
+    algorytm.cpp \
+    kometascene.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
     vector.h \
     symulation.h \
     kometa.h \
-    algorytm.h
+    algorytm.h \
+    kometascene.h
 
 FORMS += \
     mainwindow.ui

@@ -3,35 +3,53 @@
 #include <vector>
 #include <cstdlib>
 #include "kometa.h"
-#include <qmath.h>
+
 
 
 #define N 10 /*liczba osobników w populacji*/
+#define ARG 4 /*liczba argumentów jednego osobnika*/
 
 using namespace std;
 
 
-class Algorytm
+class Populacja
 {
 
 public:
-    Algorytm();
+    Populacja();
+
+    //początkowi osobnicy populacji
+    vector <Kometa*> osobniki;
+    //rozklady osobników
+    vector <vector<double>> rozklady;
+
+    //sekwencja rodziców do rozmnażania
+    vector <Kometa*> sekwencjaRodzicow;
+    //rozklady osobników
+    vector <vector<double>> rozkladySekwencji;
+
+    //zardoki
+    vector <Kometa*> zarodki;
+    //rozklady osobników
+    vector <vector<double>> rozkladyZarodkow;
+
+
+
+
+    //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
+    void tworzSekwencje();
+    //krzyżuje osobniki z sekwencji, tworząc zarodki
+    void krzyzowanie();
+    //mutuje zarodki tworząc nowe osobniki
+    void mutacja();
+
+
+    //metoda losująca liczbę z przedziału <a,b>
+    static double losuj(double a, int b);
+    //metoda zwracająca liczbę z rozkładu normalnego dla danego x
+    static double rozkladNormalny(int x);
 
 private:
-    vector <Kometa> osobniki;
-    vector <double> rozklady;
-
-
-    Kometa reprodukcja(Kometa os1, Kometa os2);
-    double liczRozklad();
-
-    static double losuj(double a, double b);
-    static double rozkladNormalny();
-
-private:
-    static const double tau = 1/(qSqrt(2*qSqrt(N)));
-    static const double tau2 = 1/(qSqrt(2N));
-    static const double pi = 3.14159265358979323846264338327950288419717;
 
 };
 
