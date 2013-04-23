@@ -5,6 +5,7 @@
 KometaScene::KometaScene(QWidget *parent) : QGraphicsView(parent)
 {
     trybGry = false;
+    drag = false;
 }
 
 void KometaScene::mouseMoveEvent(QMouseEvent *mouseEvent)
@@ -13,9 +14,43 @@ void KometaScene::mouseMoveEvent(QMouseEvent *mouseEvent)
 
         QPointF punkt = mapToScene(mouseEvent->pos().x() , mouseEvent->pos().y());
 
-        gracz->ustawPozycje(Vector2(punkt.x(), punkt.y()));
+        if (!drag) {
+            gracz->ustawPozycje(Vector2(punkt.x(), punkt.y()));
+        } else { //drag mode = user ustawia sile uderzenia
+            this->scene()->removeItem(linia);
+            linia = new QGraphicsLineItem(klikX, klikY, punkt.x(), punkt.y());
+            linia->setPen(QPen(QColor::fromRgb(255, 255, 255)));
+            this->scene()->addItem(linia);
+        }
     }
 
     QGraphicsView::mouseMoveEvent(mouseEvent);
-    this->scene()->update(0, 0, 800, 600);
+}
+
+void KometaScene::mousePressEvent(QMouseEvent *event)
+{
+    if (trybGry) {
+        drag = true;
+        QPointF punkt = mapToScene(event->pos().x() , event->pos().y());
+        klikX = punkt.x();
+        klikY = punkt.y();
+        linia = new QGraphicsLineItem(klikX, klikY, klikX, klikY);
+        this->scene()->addItem(linia);
+    }
+}
+
+void KometaScene::mouseReleaseEvent(QMouseEvent *event)
+{
+    QPointF punkt = mapToScene(event->pos().x() , event->pos().y());
+
+    puscX = punkt.x();
+    puscY = punkt.y();
+
+    this->scene()->removeItem(linia);
+    trybGry = false;
+    drag = false;
+
+    gracz->ustawKierunek(Vector2((klikX - puscX)/100, (klikY - puscY)/100));
+
+    emit graczPuscil();
 }

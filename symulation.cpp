@@ -34,7 +34,7 @@ Vector2 Symulation::dvGrav(Planeta *p, Kometa *k, double dt)
     Vector2 posKometa = k->zwrocSrodek();
     Vector2 r = posPlaneta - posKometa;
     double rd = r.dlugosc();
-    Vector2 dv = (r/rd) * (G*mPlaneta/rd*rd);
+    Vector2 dv = (r/rd) * (G*mPlaneta/(rd*rd));
     dv = dv*dt;
     return dv;
 }
@@ -68,13 +68,18 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
 {
     Vector2 dv(0,0);
 
+    int i = 0;
+
     for(vector<Planeta*>::iterator it = this->planety.begin(); it != planety.end(); ++it){
+        qDebug() << i++;
         dv = dv + this->dvGrav(*it, k, dt);
     }
 
     // tu robimy set pozycja
     k->ustawKierunek(k->zwrocKierunek() + dv);
-    k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
+    Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
+    emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
+    //k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
 
     for(vector<Planeta*>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
@@ -109,13 +114,16 @@ void Symulation::doWork()
     QTime zegar;
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
+    double diff = 1;
 
     while (1) {
         last_time = zegar.elapsed();
-        if (!krokSymulacji(0.01, gracz))
+        if (!krokSymulacji(qMax(diff, 1.0), gracz))
             break;
         current_time = zegar.elapsed();
-        qDebug() << FRAME_TIME - (current_time - last_time);
+        diff = current_time - last_time ;
+        qDebug() << "roznica == " << diff;
+        qDebug() << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
         watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
     }
 }

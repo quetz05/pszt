@@ -6,6 +6,7 @@
 #include "vector.h"
 #include <vector>
 #include <QThread>
+#include "wiadomosc.h"
 
 #define FRAME_TIME 33.3333
 
@@ -29,6 +30,9 @@ public:
     void dodajGracza(Kometa *nowy) { gracz = nowy; }
     void usunPlanety();
     void start();
+
+signals:
+    void powiadom(Kometa *naCzym, Wiadomosc wiad);
 
 public slots:
 

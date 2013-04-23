@@ -27,7 +27,8 @@ HEADERS  += mainwindow.h \
     symulation.h \
     kometa.h \
     algorytm.h \
-    kometascene.h
+    kometascene.h \
+    wiadomosc.h
 
 FORMS += \
     mainwindow.ui

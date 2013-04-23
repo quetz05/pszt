@@ -4,7 +4,7 @@
 #include "vector.h"
 #include <QGraphicsItem>
 
-class Planeta : public QGraphicsItem
+class Planeta : public QGraphicsEllipseItem
 {
 
 public:
