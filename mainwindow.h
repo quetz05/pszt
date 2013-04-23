@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "kometascene.h"
+#include "symulation.h"
+#include "wiadomosc.h"
 
 namespace Ui {
     class MainWindow;
@@ -24,6 +26,9 @@ public slots:
     void nastepna() {}
     void tabela() {}
 
+    void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
+    void startSim();
+
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -33,6 +38,9 @@ private:
 
     int ilePlanet, minWaga, maksWaga;
     QGraphicsScene *scena;
+
+    Symulation *sim;
+    Kometa *gracz;
 };
 
 #endif // MAINWINDOW_H

@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->maksWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMaksWage(int)));
     connect(ui->guzikGeneruj, SIGNAL(clicked()), this, SLOT(generujPlansze()));
     connect(ui->guzikGraj, SIGNAL(clicked()), this, SLOT(graj()));
+    connect(ui->rysownik, SIGNAL(graczPuscil()), this, SLOT(startSim()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -27,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rysownik->setScene(scena);
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
+
+    sim = new Symulation();
+    connect(sim, SIGNAL(powiadom(Kometa*,Wiadomosc)),
+            this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -74,6 +79,8 @@ void MainWindow::generujPlansze()
     qreal x, y;
     srand(time(NULL));
 
+    sim->usunPlanety();
+
     for (int i = 0; i < ilePlanet; ++i) {
 
         do {
@@ -89,13 +96,47 @@ void MainWindow::generujPlansze()
         } while (scena->collidingItems(kolo).count());
 
         scena->addItem(kolo);
+        sim->dodajPlanete(kolo);
     }
 }
 
 void MainWindow::graj()
 {
-    Kometa *gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
+    gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
     scena->addItem(gracz);
     ui->rysownik->przypiszGracz(gracz);
     ui->rysownik->ustawTrybGry(true);
+
+    /*int x, y;
+    Kometa *gracz;
+
+    do {
+        x = ( rand() % (int)(790) );
+        y = ( rand() % (int)(590) );
+
+        gracz = new Kometa(Vector2(x, y), Vector2(0, 0));
+
+    } while (scena->collidingItems(gracz).count());
+
+    qDebug() << "gracz na pozycji == " << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
+
+    scena->addItem(gracz);
+
+    sim->dodajGracza(gracz);
+    sim->start();*/
+
+
+
+}
+
+void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
+{
+    switch (wiad.typ) {
+        case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y));
+    }
+}
+
+void MainWindow::startSim() {
+    sim->dodajGracza(gracz);
+    sim->start();
 }

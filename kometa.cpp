@@ -17,3 +17,8 @@ void Kometa::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->setBrush(QBrush(QColor::fromRgb(0xcc, 0x67, 0x33)));
     painter->drawEllipse(QPointF(srodek.x, srodek.y), promien, promien);
 }
+
+void Kometa::ustawPozycje(Vector2 p) {
+    srodek = p;
+    this->setRect(boundingRect());
+}

@@ -8,13 +8,12 @@ const double pi = 3.14159265358979323;
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
 static double tau2 = 1 / (qSqrt(2 * N));
 
-
 Populacja::Populacja()
 {
     //wektor rozkładów osobnika
     vector <double> rozOs;
 
-    for(int i = 0; i<N; i++)
+    for(int i = 0; i < N; i++)
     {
         osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(0,100),losuj(0,100))));
 

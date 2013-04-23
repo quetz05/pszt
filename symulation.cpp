@@ -2,6 +2,8 @@
 #include "planeta.h"
 #include "kometa.h"
 #include "math.h"
+#include <QTime>
+#include <QDebug>
 
 #define G 6.67384
 
@@ -10,6 +12,10 @@ using namespace std;
 
 Symulation::Symulation()
 {
+    watek = new QThread();
+    connect(watek, SIGNAL(started()), this, SLOT(doWork()));
+    moveToThread(watek);
+
 }
 /**
  * @brief Symulation::dvGrav
@@ -28,7 +34,7 @@ Vector2 Symulation::dvGrav(Planeta *p, Kometa *k, double dt)
     Vector2 posKometa = k->zwrocSrodek();
     Vector2 r = posPlaneta - posKometa;
     double rd = r.dlugosc();
-    Vector2 dv = (r/rd) * (G*mPlaneta/rd*rd);
+    Vector2 dv = (r/rd) * (G*mPlaneta/(rd*rd));
     dv = dv*dt;
     return dv;
 }
@@ -62,17 +68,23 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
 {
     Vector2 dv(0,0);
 
+    int i = 0;
+
     for(vector<Planeta*>::iterator it = this->planety.begin(); it != planety.end(); ++it){
+        qDebug() << i++;
         dv = dv + this->dvGrav(*it, k, dt);
     }
 
     // tu robimy set pozycja
     k->ustawKierunek(k->zwrocKierunek() + dv);
-    k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
+    Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
+    emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
+    //k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
 
     for(vector<Planeta*>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
+
     if(k->zwrocSrodek().x <= 0 || k->zwrocSrodek().x >= 800)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x * (-1), k->zwrocKierunek().y) );
 
@@ -80,4 +92,38 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x, k->zwrocKierunek().y * (-1) ) );
 
     return true;
+}
+
+void Symulation::dodajPlanete(Planeta *nowa)
+{
+    planety.push_back(nowa);
+}
+
+void Symulation::usunPlanety()
+{
+    planety.clear();
+}
+
+void Symulation::start()
+{
+    watek->start();
+}
+
+void Symulation::doWork()
+{
+    QTime zegar;
+    zegar.start();
+    int last_time = zegar.elapsed(), current_time = 0;
+    double diff = 1;
+
+    while (1) {
+        last_time = zegar.elapsed();
+        if (!krokSymulacji(qMax(diff, 1.0), gracz))
+            break;
+        current_time = zegar.elapsed();
+        diff = current_time - last_time ;
+        qDebug() << "roznica == " << diff;
+        qDebug() << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
+        watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+    }
 }
