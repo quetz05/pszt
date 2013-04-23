@@ -2,6 +2,8 @@
 #include "planeta.h"
 #include "kometa.h"
 #include "math.h"
+#include <QTime>
+#include <QDebug>
 
 #define G 6.67384
 
@@ -10,6 +12,10 @@ using namespace std;
 
 Symulation::Symulation()
 {
+    watek = new QThread();
+    connect(watek, SIGNAL(started()), this, SLOT(doWork()));
+    moveToThread(watek);
+
 }
 /**
  * @brief Symulation::dvGrav
@@ -73,6 +79,7 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
     for(vector<Planeta*>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
+
     if(k->zwrocSrodek().x <= 0 || k->zwrocSrodek().x >= 800)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x * (-1), k->zwrocKierunek().y) );
 
@@ -80,4 +87,35 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x, k->zwrocKierunek().y * (-1) ) );
 
     return true;
+}
+
+void Symulation::dodajPlanete(Planeta *nowa)
+{
+    planety.push_back(nowa);
+}
+
+void Symulation::usunPlanety()
+{
+    planety.clear();
+}
+
+void Symulation::start()
+{
+    watek->start();
+}
+
+void Symulation::doWork()
+{
+    QTime zegar;
+    zegar.start();
+    int last_time = zegar.elapsed(), current_time = 0;
+
+    while (1) {
+        last_time = zegar.elapsed();
+        if (!krokSymulacji(0.01, gracz))
+            break;
+        current_time = zegar.elapsed();
+        qDebug() << FRAME_TIME - (current_time - last_time);
+        watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+    }
 }

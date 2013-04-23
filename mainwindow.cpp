@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rysownik->setScene(scena);
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
+
+    sim = new Symulation();
 }
 
 MainWindow::~MainWindow()
@@ -89,13 +91,35 @@ void MainWindow::generujPlansze()
         } while (scena->collidingItems(kolo).count());
 
         scena->addItem(kolo);
+        sim->dodajPlanete(kolo);
     }
 }
 
 void MainWindow::graj()
 {
-    Kometa *gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
+    /*Kometa *gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
     scena->addItem(gracz);
     ui->rysownik->przypiszGracz(gracz);
-    ui->rysownik->ustawTrybGry(true);
+    ui->rysownik->ustawTrybGry(true);*/
+
+    int x, y;
+    Kometa *gracz;
+
+    do {
+        x = ( rand() % (int)(790) );
+        y = ( rand() % (int)(590) );
+
+        gracz = new Kometa(Vector2(x, y), Vector2(0, 0));
+
+    } while (scena->collidingItems(gracz).count());
+
+    qDebug() << "gracz na pozycji == " << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
+
+    scena->addItem(gracz);
+
+    sim->dodajGracza(gracz);
+    sim->start();
+
+
+
 }

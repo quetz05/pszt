@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "kometascene.h"
+#include "symulation.h"
 
 namespace Ui {
     class MainWindow;
@@ -33,6 +34,8 @@ private:
 
     int ilePlanet, minWaga, maksWaga;
     QGraphicsScene *scena;
+
+    Symulation *sim;
 };
 
 #endif // MAINWINDOW_H
