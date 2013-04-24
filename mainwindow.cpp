@@ -14,7 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     ilePlanet = minWaga = maksWaga = 1;
-    gracz = NULL;
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        gracz[i] = NULL;
+        sim[i] = NULL;
+    }
 
     connect(ui->liczbaPlanet, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbePlanet(int)));
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
@@ -31,13 +35,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
 
+    ui->czasPole->setText("30");
+
     scena = new QGraphicsScene(0, 0, 800, 600);
     ui->rysownik->setScene(scena);
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
 
-    sim = new Symulation();
-    connect(sim, SIGNAL(powiadom(Kometa*,Wiadomosc)),
+    sim[0] = new Symulation();
+    connect(sim[0], SIGNAL(powiadom(Kometa*,Wiadomosc)),
             this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
 }
 
@@ -89,7 +95,7 @@ void MainWindow::generujPlansze()
     qreal x, y;
     srand(time(NULL));
 
-    sim->usunPlanety();
+    sim[0]->usunPlanety();
 
     for (int i = 0; i < ilePlanet; ++i) {
 
@@ -103,12 +109,10 @@ void MainWindow::generujPlansze()
 
             kolo = new Planeta(Vector2(x, y), masa);
 
-            qDebug() << "ilosc zderzen : " << scena->collidingItems(kolo).count();
-
         } while (scena->collidingItems(kolo).count());
 
         scena->addItem(kolo);
-        sim->dodajPlanete(kolo);
+        sim[0]->dodajPlanete(kolo);
     }
 }
 
@@ -116,14 +120,14 @@ void MainWindow::graj()
 {
     ui->guzikSymuluj->setEnabled(false);
 
-    if (gracz) {
-        scena->removeItem(gracz);
-        delete gracz;
+    if (gracz[0]) {
+        scena->removeItem(gracz[0]);
+        delete gracz[0];
     }
 
-    gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
-    scena->addItem(gracz);
-    ui->rysownik->przypiszGracz(gracz);
+    gracz[0] = new Kometa(Vector2(-100, -100), Vector2(0, 0));
+    scena->addItem(gracz[0]);
+    ui->rysownik->przypiszGracz(gracz[0]);
     ui->rysownik->ustawTrybGry(true);
 }
 
@@ -135,6 +139,6 @@ void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 }
 
 void MainWindow::startSim() {
-    sim->dodajGracza(gracz);
-    sim->start();
+    sim[0]->dodajGracza(gracz[0]);
+    sim[0]->start();
 }

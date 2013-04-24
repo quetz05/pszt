@@ -50,6 +50,8 @@ void KometaScene::mouseReleaseEvent(QMouseEvent *event)
     trybGry = false;
     drag = false;
 
+    qDebug() << "czysty == " << (klikX - puscX) << " :: " << (klikY - puscY);
+
     gracz->ustawKierunek(Vector2((klikX - puscX)/100, (klikY - puscY)/100));
 
     emit graczPuscil();

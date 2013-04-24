@@ -68,10 +68,7 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
 {
     Vector2 dv(0,0);
 
-    int i = 0;
-
     for(vector<Planeta*>::iterator it = this->planety.begin(); it != planety.end(); ++it){
-        qDebug() << i++;
         dv = dv + this->dvGrav(*it, k, dt);
     }
 
@@ -126,8 +123,6 @@ void Symulation::doWork()
             break;
         current_time = zegar.elapsed();
         diff = current_time - last_time ;
-        qDebug() << "roznica == " << diff;
-        qDebug() << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
         watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
     }
 }

@@ -97,7 +97,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="czasPole"/>
+      <widget class="QLineEdit" name="czasPole">
+       <property name="inputMask">
+        <string>9999</string>
+       </property>
+       <property name="text">
+        <string>30</string>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QGroupBox" name="poziomParam">

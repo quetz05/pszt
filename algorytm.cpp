@@ -12,12 +12,9 @@ static double tau2 = 1 / (qSqrt(2 * N));
 
 Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
 {
-
-
-
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(-100,100),losuj(-100,100))));
+        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(-300,300),losuj(-300,300))));
         //wektor rozkładów osobnika
         vector <double> rozOs;
         for(int j = 0; j<ARG; j++)
@@ -32,10 +29,6 @@ Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
 
 Populacja::Populacja(vector <Kometa*> nowaPopulacja, vector <vector<double>> noweRozklady)
 {
-
-
-
-
 
 }
 

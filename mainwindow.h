@@ -7,6 +7,8 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 
+#define NUM_THREADS 10
+
 namespace Ui {
     class MainWindow;
 }
@@ -39,8 +41,8 @@ private:
     int ilePlanet, minWaga, maksWaga;
     QGraphicsScene *scena;
 
-    Symulation *sim;
-    Kometa *gracz;
+    Symulation *sim[NUM_THREADS];
+    Kometa *gracz[NUM_THREADS];
 };
 
 #endif // MAINWINDOW_H
