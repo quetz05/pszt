@@ -6,6 +6,7 @@
 #include <QGraphicsLineItem>
 #include <time.h>
 #include "kometascene.h"
+#include "QPushButton"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -23,6 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
+
+    ui->guzikGraj->setEnabled(false);
+    ui->guzikSymuluj->setEnabled(false);
+    ui->guzikNastepna->setEnabled(false);
+    ui->guzikTabela->setEnabled(false);
 
     scena = new QGraphicsScene(0, 0, 800, 600);
     ui->rysownik->setScene(scena);
@@ -66,6 +72,9 @@ void MainWindow::generujPlansze()
         return;
     }
 
+    ui->guzikGraj->setEnabled(true);
+    ui->guzikSymuluj->setEnabled(true);
+
     scena->clear();
 
     scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
@@ -92,6 +101,8 @@ void MainWindow::generujPlansze()
             qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
 
             kolo = new Planeta(Vector2(x, y), masa);
+
+            qDebug() << "ilosc zderzen : " << scena->collidingItems(kolo).count();
 
         } while (scena->collidingItems(kolo).count());
 
