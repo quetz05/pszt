@@ -2,6 +2,7 @@
 #define KOMETA_H
 
 #include "planeta.h"
+#include <QPainterPath>
 
 class Kometa : public Planeta
 {
@@ -13,10 +14,16 @@ public:
     Vector2 zwrocKierunek(){ return kierunek; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }
+    void narysujSciezke();
+    void ustawInteraktywne(bool enabled) { interaktywne = enabled; }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
+    Vector2 pozPocz;
     Vector2 kierunek;
+    QPainterPath *sciezka;
+    bool interaktywne;
+    bool rysujSciezke;
 };
 #endif // KOMETA_H

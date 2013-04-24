@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->guzikGeneruj, SIGNAL(clicked()), this, SLOT(generujPlansze()));
     connect(ui->guzikGraj, SIGNAL(clicked()), this, SLOT(graj()));
     connect(ui->rysownik, SIGNAL(graczPuscil()), this, SLOT(startSim()));
+    connect(ui->guzikSymuluj, SIGNAL(clicked()), this, SLOT(symuluj()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -42,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
 
-    sim[0] = new Symulation();
+    sim[0] = new Symulation(0);
     connect(sim[0], SIGNAL(powiadom(Kometa*,Wiadomosc)),
             this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
 }
@@ -113,6 +114,7 @@ void MainWindow::generujPlansze()
 
         scena->addItem(kolo);
         sim[0]->dodajPlanete(kolo);
+        planety.push_back(kolo);
     }
 }
 
@@ -129,6 +131,29 @@ void MainWindow::graj()
     scena->addItem(gracz[0]);
     ui->rysownik->przypiszGracz(gracz[0]);
     ui->rysownik->ustawTrybGry(true);
+}
+
+void MainWindow::symuluj()
+{
+    for (int i = 0; i < NUM_THREADS; ++i) {
+
+        do {
+            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2((rand() % 200) - 100, (rand() % 200) - 100));
+            gracz[i]->ustawInteraktywne(false);
+        } while (scena->collidingItems(gracz[i]).count());
+
+        scena->addItem(gracz[i]);
+
+        sim[i] = new Symulation(i);
+        sim[i]->dodajGracza(gracz[i]);
+        sim[i]->ustawInteraktywne(false);
+        for (int j = 0; j < planety.size(); ++j)
+            sim[i]->dodajPlanete(planety[j]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        sim[i]->start();
+    }
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)

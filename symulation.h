@@ -19,9 +19,11 @@ private:
     std::vector <Planeta*> planety;
     Kometa *gracz;
     QThread *watek;
+    bool interaktywne;
+    int ident;
 
 public:
-    Symulation();
+    Symulation(int id);
 
     Vector2 dvGrav(Planeta *p, Kometa *k, double dt);
     bool HitTest(Planeta *p ,Kometa *k);
@@ -30,6 +32,8 @@ public:
     void dodajGracza(Kometa *nowy) { gracz = nowy; }
     void usunPlanety();
     void start();
+
+    void ustawInteraktywne(bool enable) { interaktywne = enable; }
 
 signals:
     void powiadom(Kometa *naCzym, Wiadomosc wiad);

@@ -7,7 +7,7 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 
-#define NUM_THREADS 10
+#define NUM_THREADS 4
 
 namespace Ui {
     class MainWindow;
@@ -24,7 +24,7 @@ public slots:
 
     void generujPlansze();
     void graj();
-    void symuluj() {}
+    void symuluj();
     void nastepna() {}
     void tabela() {}
 
@@ -37,6 +37,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    std::vector <Planeta*> planety;
 
     int ilePlanet, minWaga, maksWaga;
     QGraphicsScene *scena;

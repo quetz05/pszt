@@ -10,11 +10,14 @@
 using namespace std;
 
 
-Symulation::Symulation()
+Symulation::Symulation(int id)
 {
     watek = new QThread();
     connect(watek, SIGNAL(started()), this, SLOT(doWork()));
     moveToThread(watek);
+
+    interaktywne = true;
+    ident = id;
 
 }
 /**
@@ -89,8 +92,11 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
 
     //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
     Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
-    emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
-    //k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
+
+    if (interaktywne)
+        emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
+    else
+        k->ustawPozycje(Vector2(nowaPozycja.x, nowaPozycja.y));
 
     return true;
 }
@@ -112,17 +118,24 @@ void Symulation::start()
 
 void Symulation::doWork()
 {
+    qDebug() << "watek << " << ident << " << start";
     QTime zegar;
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
-    double diff = 1;
 
     while (1) {
         last_time = zegar.elapsed();
-        if (!krokSymulacji(/*qMax(diff, 1.0)*/1, gracz))
+        if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
-        diff = current_time - last_time ;
-        watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+        if (interaktywne)
+            watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
     }
+
+    qDebug() << "watek << " << ident << " << stop ------ !!!! ------ ";
+
+    if (!interaktywne)
+        gracz->narysujSciezke();
+
+    qDebug() << "watek << " << ident << " << narysowal sciezke ";
 }
