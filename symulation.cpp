@@ -77,19 +77,23 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
 
     // tu robimy set pozycja
     k->ustawKierunek(k->zwrocKierunek() + dv);
-    Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
-    emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
-    //k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
+
 
     for(vector<Planeta*>::iterator it = this->planety.begin(); it!=planety.end(); ++it){
         if(this->HitTest(*it,k)) return false;
     }
 
-    if(k->zwrocSrodek().x <= 0 || k->zwrocSrodek().x >= 800)
+    if(k->zwrocSrodek().x-k->zwrocPromien() <= 0 || k->zwrocSrodek().x+k->zwrocPromien() >= 800)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x * (-1), k->zwrocKierunek().y) );
 
-    if(k->zwrocSrodek().y <= 0 || k->zwrocSrodek().y >= 600)
+    if(k->zwrocSrodek().y- k->zwrocPromien() <= 0 || k->zwrocSrodek().y +k->zwrocPromien() >= 600)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x, k->zwrocKierunek().y * (-1) ) );
+
+
+    //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
+    Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
+    emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
+    //k->ustawPozycje(k->zwrocKierunek() * dt + k->zwrocSrodek());
 
     return true;
 }

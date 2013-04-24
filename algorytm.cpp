@@ -3,27 +3,40 @@
 #include <qmath.h>
 #include <time.h>
 #include <iostream>
+#include <QDebug>
 
-const double pi = 3.14159265358979323;
+
+
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
 static double tau2 = 1 / (qSqrt(2 * N));
 
-Populacja::Populacja()
+Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
 {
-    //wektor rozkładów osobnika
-    vector <double> rozOs;
+
+
 
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(0,100),losuj(0,100))));
-
+        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(-100,100),losuj(-100,100))));
+        //wektor rozkładów osobnika
+        vector <double> rozOs;
         for(int j = 0; j<ARG; j++)
         {
-            rozOs.push_back(rozkladNormalny(losuj(0,4)));
+            double a =rozkladNorm(generator);
+            rozOs.push_back(a);
         }
 
         rozklady.push_back(rozOs);
     }
+}
+
+Populacja::Populacja(vector <Kometa*> nowaPopulacja, vector <vector<double>> noweRozklady)
+{
+
+
+
+
+
 }
 
 void Populacja::tworzSekwencje()
@@ -59,8 +72,6 @@ void Populacja::krzyzowanie()
 
         rozkladyZarodkow.push_back(rozkl);
         zarodki.push_back(new Kometa(sr, kier));
-
-
     }
 
 }
@@ -73,14 +84,14 @@ void Populacja::mutacja()
 
     for(unsigned int i = 0; i<rozkladyZarodkow.size(); i++)
     {
-       xi = rozkladNormalny(losuj(0,4));
+       xi = rozkladNorm(generator);
 
        double odch;
        vector <double> rozk;
 
        for(unsigned int j=0; j<rozkladyZarodkow[i].size(); j++)
        {
-                 odch = rozkladyZarodkow[i][j]*qExp(tau2*xi + tau*rozkladNormalny(losuj(0,4)));
+                 odch = rozkladyZarodkow[i][j]*qExp(tau2*xi + tau*rozkladNorm(generator));
                  rozk.push_back(odch);
        }
 
@@ -99,10 +110,10 @@ void Populacja::tworzNowychOsobnikow()
 
     for(int i=0; i<N;i++)
     {
-        sr.x = zarodki[i]->zwrocSrodek().x + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][0];
-        sr.y = zarodki[i]->zwrocSrodek().y + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][1];
-        kier.x = zarodki[i]->zwrocKierunek().x + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][2];
-        kier.y = zarodki[i]->zwrocKierunek().y + rozkladNormalny(losuj(0,4))*rozkladyZarodkow[i][3];
+        sr.x = zarodki[i]->zwrocSrodek().x + rozkladNorm(generator)*rozkladyZarodkow[i][0];
+        sr.y = zarodki[i]->zwrocSrodek().y + rozkladNorm(generator)*rozkladyZarodkow[i][1];
+        kier.x = zarodki[i]->zwrocKierunek().x + rozkladNorm(generator)*rozkladyZarodkow[i][2];
+        kier.y = zarodki[i]->zwrocKierunek().y + rozkladNorm(generator)*rozkladyZarodkow[i][3];
 
         nowiOsobnicy.push_back(new Kometa(sr, kier));
     }
@@ -121,13 +132,16 @@ void Populacja::tworzNowaPopulacje()
     }
 }
 
-double Populacja::losuj(double a, int b)
+double Populacja::losuj(int a, int b)
 {
-    return ((qrand() % b) + a);
+    int min = 100*a;
+    int max = 100*b;
+
+    double losowa = rand()%(max-min+1)+min;
+
+    double wylosuj = losowa/100.0f;
+
+    return wylosuj;
 }
 
-double Populacja::rozkladNormalny(int x)
-{
-    return 1/qSqrt(2*pi)*qExp(-(x*x)/2);
-}
 
