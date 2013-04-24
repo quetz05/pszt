@@ -10,6 +10,7 @@ static double tau2 = 1 / (qSqrt(2 * N));
 
 Populacja::Populacja()
 {
+
     //wektor rozkładów osobnika
     vector <double> rozOs;
 
