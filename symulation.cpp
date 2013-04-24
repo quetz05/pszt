@@ -118,7 +118,7 @@ void Symulation::doWork()
 
     while (1) {
         last_time = zegar.elapsed();
-        if (!krokSymulacji(qMax(diff, 1.0), gracz))
+        if (!krokSymulacji(/*qMax(diff, 1.0)*/1, gracz))
             break;
         current_time = zegar.elapsed();
         diff = current_time - last_time ;
