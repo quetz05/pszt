@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     ilePlanet = minWaga = maksWaga = 1;
+    gracz = NULL;
 
     connect(ui->liczbaPlanet, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbePlanet(int)));
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
@@ -113,31 +114,17 @@ void MainWindow::generujPlansze()
 
 void MainWindow::graj()
 {
+    ui->guzikSymuluj->setEnabled(false);
+
+    if (gracz) {
+        scena->removeItem(gracz);
+        delete gracz;
+    }
+
     gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
     scena->addItem(gracz);
     ui->rysownik->przypiszGracz(gracz);
     ui->rysownik->ustawTrybGry(true);
-
-    /*int x, y;
-    Kometa *gracz;
-
-    do {
-        x = ( rand() % (int)(790) );
-        y = ( rand() % (int)(590) );
-
-        gracz = new Kometa(Vector2(x, y), Vector2(0, 0));
-
-    } while (scena->collidingItems(gracz).count());
-
-    qDebug() << "gracz na pozycji == " << gracz->zwrocSrodek().x << " :: " << gracz->zwrocSrodek().y;
-
-    scena->addItem(gracz);
-
-    sim->dodajGracza(gracz);
-    sim->start();*/
-
-
-
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
