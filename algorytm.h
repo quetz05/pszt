@@ -3,11 +3,16 @@
 #include <vector>
 #include <cstdlib>
 #include "kometa.h"
+#include <random>
 
 
 
 #define N 10 /*liczba osobników w populacji*/
 #define ARG 4 /*liczba argumentów jednego osobnika*/
+
+/**dodanie pair do vectora**/
+/**likwidacja zbędnych wektorów**/
+/**do 1 funkcji**/
 
 using namespace std;
 
@@ -17,6 +22,7 @@ class Populacja
 
 public:
     Populacja();
+    Populacja(vector <Kometa*> nowaPopulacja, vector <vector<double>> noweRozklady);
 
     //początkowi osobnicy populacji
     vector <Kometa*> osobniki;
@@ -40,6 +46,8 @@ public:
     //tworzy nowa populacje
     void tworzNowaPopulacje();
 
+    double oceniaj();
+
 
 private:
 
@@ -57,12 +65,12 @@ private:
     void mutacja();
 
     //metoda losująca liczbę z przedziału <a,b>
-    static double losuj(double a, int b);
-    //metoda zwracająca liczbę z rozkładu normalnego dla danego x
-    static double rozkladNormalny(int x);
+    static double losuj(int a, int b);
 
-
-
+    std::random_device rd;
+    //generator liczb pseudolosowych (do rozkladu normalnego)
+    std::mt19937 generator;
+    std::normal_distribution<> rozkladNorm;
 };
 
 #endif // ALGORYTM_H
