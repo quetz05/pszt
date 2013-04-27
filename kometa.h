@@ -17,6 +17,7 @@ public:
     void narysujSciezke();
     void ustawInteraktywne(bool enabled) { interaktywne = enabled; }
     void ustawKolor(QColor k) { kolor = k; }
+    void dodajOstatni();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -27,5 +28,6 @@ private:
     QColor kolor;
     bool interaktywne;
     bool rysujSciezke;
+    int counter;
 };
 #endif // KOMETA_H

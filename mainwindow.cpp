@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     ilePlanet = minWaga = maksWaga = 1;
+    counter = 0;
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         gracz[i] = NULL;
@@ -150,10 +151,14 @@ void MainWindow::symuluj()
         sim[i]->ustawInteraktywne(false);
         for (int j = 0; j < planety.size(); ++j)
             sim[i]->dodajPlanete(planety[j]);
+
+        connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
+                this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
     }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         sim[i]->start();
+        this->thread()->msleep(100);
     }
 }
 
@@ -161,6 +166,14 @@ void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
         case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y));
+        case zakonczyl : ++counter;
+    }
+
+    if (counter == NUM_THREADS) {
+        for (int i = 0; i < NUM_THREADS; ++i) {
+            gracz[i]->narysujSciezke();
+            scena->update(0, 0, 800, 600);
+        }
     }
 }
 

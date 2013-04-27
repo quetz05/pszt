@@ -93,6 +93,9 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
     //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
     Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
 
+
+
+
     if (interaktywne)
         emit powiadom(k, Wiadomosc(nowaPozycja.x, nowaPozycja.y, rusz));
     else
@@ -134,8 +137,10 @@ void Symulation::doWork()
 
     qDebug() << "watek << " << ident << " << stop ------ !!!! ------ ";
 
-    if (!interaktywne)
-        gracz->narysujSciezke();
+    if (!interaktywne) {
+        gracz->dodajOstatni();
+        emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
+    }
 
     qDebug() << "watek << " << ident << " << narysowal sciezke ";
 }

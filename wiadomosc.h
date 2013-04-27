@@ -5,7 +5,7 @@
 
 typedef enum
 {
-    predkosc, polozenie, delta, rusz, fps
+    predkosc, polozenie, delta, rusz, fps, zakonczyl
 } TYP_WIADOMOSCI;
 
 typedef struct Wiadomosc

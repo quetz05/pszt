@@ -1,5 +1,6 @@
 #include "kometa.h"
 #include <QPainter>
+#include <QDebug>
 
 Kometa::Kometa(Vector2 sr, Vector2 k)
 {
@@ -12,6 +13,7 @@ Kometa::Kometa(Vector2 sr, Vector2 k)
     sciezka->moveTo(sr.x, sr.y);
     interaktywne = true;
     rysujSciezke = false;
+    counter = 0;
     kolor = QColor::fromRgb(0xcc, 0x67, 0x33);
     this->setRect(boundingRect());
 }
@@ -32,18 +34,26 @@ void Kometa::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     } else {
         painter->drawEllipse(QPointF(pozPocz.x, pozPocz.y), promien, promien);
     }
-
-
 }
 
 void Kometa::ustawPozycje(Vector2 p) {
+
     srodek = p;
-    if (!interaktywne)
-        sciezka->lineTo(p.x, p.y);
+    if (!interaktywne) {
+        ++counter;
+
+        if (!(counter % 5))
+            sciezka->lineTo(p.x, p.y);
+    }
     this->setRect(boundingRect());
 }
 
 void Kometa::narysujSciezke()
 {
     rysujSciezke = true;
+}
+
+void Kometa::dodajOstatni()
+{
+    sciezka->lineTo(srodek.x, srodek.y);
 }

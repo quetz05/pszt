@@ -7,7 +7,7 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 
-#define NUM_THREADS 3
+#define NUM_THREADS 20
 
 namespace Ui {
     class MainWindow;
@@ -45,6 +45,8 @@ private:
 
     Symulation *sim[NUM_THREADS];
     Kometa *gracz[NUM_THREADS];
+
+    int counter;
 };
 
 #endif // MAINWINDOW_H
