@@ -16,6 +16,7 @@ public:
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
     void ustawInteraktywne(bool enabled) { interaktywne = enabled; }
+    void ustawKolor(QColor k) { kolor = k; }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -23,6 +24,7 @@ private:
     Vector2 pozPocz;
     Vector2 kierunek;
     QPainterPath *sciezka;
+    QColor kolor;
     bool interaktywne;
     bool rysujSciezke;
 };

@@ -138,8 +138,9 @@ void MainWindow::symuluj()
     for (int i = 0; i < NUM_THREADS; ++i) {
 
         do {
-            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2((rand() % 200) - 100, (rand() % 200) - 100));
+            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2(0,0));
             gracz[i]->ustawInteraktywne(false);
+            gracz[i]->ustawKolor(QColor::fromRgb(rand()%256, rand()%256, rand()%256));
         } while (scena->collidingItems(gracz[i]).count());
 
         scena->addItem(gracz[i]);
