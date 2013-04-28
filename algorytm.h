@@ -9,6 +9,7 @@
 
 using namespace std;
 
+typedef vector<double> vectorDouble;
 
 class Populacja
 {
@@ -28,6 +29,8 @@ public:
     //nowa populacja
     vector <Kometa*> noweOsobniki;
 
+    void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
+
     //tworzy nowa populacje
     void tworzNowaPopulacje();
 
@@ -37,6 +40,9 @@ public:
 
 
 private:
+
+    //czas ktory uznajemy za nieskonczonosc
+    int czasDocelowy;
 
     //sekwencja rodziców do rozmnażania
     vector <Kometa*> sekwencjaRodzicow;
