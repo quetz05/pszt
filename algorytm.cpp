@@ -15,7 +15,7 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
     this->plansza = p;
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(2,2),losuj(-2,2))));
+        osobniki.push_back(new Kometa(Vector2(losuj(10,780),losuj(10,580)), Vector2(losuj(2,2),losuj(-2,2))));
 
         for(int j = 0; j<ARG; j++)
         {
@@ -159,14 +159,16 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
 double Populacja::losuj(int a, int b)
 {
-    int min = 100*a;
-    int max = 100*b;
+//    int min = 100*a;
+//    int max = 100*b;
 
-    double losowa = rand()%(max-min+1)+min;
+//    double losowa = rand()%(max-min+1)+min;
 
-    double wylosuj = losowa/100.0f;
+//    double wylosuj = losowa/100.0f;
 
-    return wylosuj;
+//    return wylosuj;
+
+    return ((double)((double)rand() / (double)RAND_MAX) * b) + a;
 }
 
 
