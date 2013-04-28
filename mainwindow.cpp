@@ -156,21 +156,13 @@ void MainWindow::nastepna()
 void MainWindow::narysuj()
 {
 
-    scena->clear();
-    scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
-    scena->addLine(-1, -1, -1, 601, QPen(QColor::fromRgb(255, 255, 255)));
-    scena->addLine(801, -1, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
-    scena->addLine(-1, 601, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    QList<QGraphicsItem*> lista = scena->items();
 
-    qDebug() << "ilosc planet == " << planety.size();
-    qDebug() << "wskaznior na pierwsza == " << &(planety[0]);
-
-    planety[0]->zwrocSrodek();
-
-    /*for (int i = 0; i < ilePlanet; ++i) {
-        qDebug() << "dodaje planete == " << i;
-        scena->addItem(planety[i]);
-    }*/
+    for (int i = 0; i < lista.size(); ++i) {
+        Kometa *temp = dynamic_cast<Kometa*>(lista[i]);
+        if (temp)
+            scena->removeItem(temp);
+    }
 
     int ile = pop->osobniki.size();
 

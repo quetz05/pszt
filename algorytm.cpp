@@ -166,7 +166,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     }
     for (unsigned int i = 0; i <k->size(); ++i) {
         while(!sim[i]->czyzakonczony())
-            //QApplication::processEvents();
             this->thread()->msleep(100);
     }
 
