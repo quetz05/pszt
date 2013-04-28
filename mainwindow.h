@@ -7,8 +7,7 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 
-#define NUM_THREADS 20
-
+#define NUM_THREADS 500
 namespace Ui {
     class MainWindow;
 }

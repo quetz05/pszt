@@ -139,7 +139,7 @@ void MainWindow::symuluj()
     for (int i = 0; i < NUM_THREADS; ++i) {
 
         do {
-            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2(0,0));
+            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2((rand() % 20)-10,(rand() % 20)-10));
             gracz[i]->ustawInteraktywne(false);
             gracz[i]->ustawKolor(QColor::fromRgb(rand()%256, rand()%256, rand()%256));
         } while (scena->collidingItems(gracz[i]).count());
@@ -158,23 +158,32 @@ void MainWindow::symuluj()
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         sim[i]->start();
-        this->thread()->msleep(100);
+        //this->thread()->msleep(100);
     }
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        while(!sim[i]->czyzakonczony())this->thread()->msleep(100);
+
+    }
+    //this->thread()->msleep(1000000);
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
         case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y));
+                    break;
         case zakonczyl : ++counter;
+                    break;
     }
 
     if (counter == NUM_THREADS) {
         for (int i = 0; i < NUM_THREADS; ++i) {
             gracz[i]->narysujSciezke();
-            scena->update(0, 0, 800, 600);
+
         }
+        scena->update(0, 0, 800, 600);
     }
+
 }
 
 void MainWindow::startSim() {
