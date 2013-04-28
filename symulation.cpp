@@ -94,7 +94,7 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
     //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
     Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
 
-
+    k->czasZycia+=dt;
 
 
     if (interaktywne)
