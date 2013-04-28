@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ilePlanet = minWaga = maksWaga = 1;
     counter = 0;
+    pierwsza = true;
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         gracz[i] = NULL;
@@ -87,6 +88,7 @@ void MainWindow::generujPlansze()
     ui->guzikSymuluj->setEnabled(true);
 
     scena->clear();
+    scena->update(0, 0, 800, 600);
 
     scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
     scena->addLine(-1, -1, -1, 601, QPen(QColor::fromRgb(255, 255, 255)));
@@ -109,7 +111,7 @@ void MainWindow::generujPlansze()
             x = ( rand() % (int)(800 - 2*prom) );
             y = ( rand() % (int)(600 - 2*prom) );
 
-            qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
+            //qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
 
             kolo = new Planeta(Vector2(x, y), masa);
 
@@ -138,16 +140,49 @@ void MainWindow::graj()
 
 void MainWindow::symuluj()
 {
+
+    qDebug() << "====================== nowa Symulacja =======================";
+
+    if (!pierwsza) {
+        for (int i = 0; i < NUM_THREADS; ++i) {
+            scena->removeItem(gracz[i]);
+            delete gracz[i];
+            gracz[i] = NULL;
+            delete sim[i];
+            sim[i] = NULL;
+        }
+
+        counter = 0;
+        scena->update(0, 0, 800, 600);
+    }
+
+    pierwsza = false;
+
     for (int i = 0; i < NUM_THREADS; ++i) {
 
         do {
-            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580), Vector2((rand() % 20)-10,(rand() % 20)-10));
+
+            qDebug() << "tworze gracz == " << i;
+
+            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580),
+                                  Vector2( ((rand() % 3) - 2),((rand() % 3) - 2)));
             gracz[i]->ustawInteraktywne(false);
             gracz[i]->ustawKolor(QColor::fromRgb(rand()%256, rand()%256, rand()%256));
+
+            qDebug() << "sprawdzam polozenie";
+            QList<QGraphicsItem*> s = scena->collidingItems(gracz[i]);
+            qDebug() << s  << " [][] wskaznior == " << &s;
+            qDebug() << "liczba << " << s.count();
+
         } while (scena->collidingItems(gracz[i]).count());
 
+        qDebug() << "dodaje gracz == " << i;
         scena->addItem(gracz[i]);
+    }
 
+    qDebug() << "dodawnaie gracz OK!!!!! ----------------- ";
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
         sim[i] = new Symulation(i);
         sim[i]->dodajGracza(gracz[i]);
         sim[i]->ustawInteraktywne(false);
@@ -160,17 +195,13 @@ void MainWindow::symuluj()
     }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
-        connect(this, SIGNAL(ruszaj()), sim[i], SLOT(start()));
-        emit ruszaj();
         sim[i]->start();
-        //this->thread()->msleep(100);
-        //this->thread()->msleep(10);
     }
     for (int i = 0; i < NUM_THREADS; ++i) {
-        while(!sim[i]->czyzakonczony())this->thread()->msleep(100);
-
+        while(!sim[i]->czyzakonczony())
+            //QApplication::processEvents();
+            this->thread()->msleep(100);
     }
-    //this->thread()->msleep(1000000);
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)

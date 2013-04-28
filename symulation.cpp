@@ -117,7 +117,6 @@ void Symulation::usunPlanety()
 
 void Symulation::start()
 {
-    qDebug() << "got it";
     watek->start();
 }
 
@@ -128,12 +127,11 @@ bool Symulation::czyzakonczony()
 
 void Symulation::doWork()
 {
-    qDebug() << "watek << " << ident << " << start";
     QTime zegar;
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
-    while (couter <1000000) {
+    while (couter < 1000000) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
@@ -143,14 +141,11 @@ void Symulation::doWork()
         //++couter;
     }
 
-    qDebug() << "watek << " << ident << " << stop ------ !!!! ------ ";
     this->czakonczony = true;
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
     }
-
-    qDebug() << "watek << " << ident << " << narysowal sciezke ";
 }
 
 void Symulation::zakonczony()

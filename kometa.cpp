@@ -1,6 +1,7 @@
 #include "kometa.h"
 #include <QPainter>
 #include <QDebug>
+#include <QStringBuilder>
 
 Kometa::Kometa(Vector2 sr, Vector2 k)
 {

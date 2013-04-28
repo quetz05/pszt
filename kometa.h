@@ -11,6 +11,8 @@ class Kometa : public Planeta
 public:
     Kometa(){}
     Kometa(Vector2 sr, Vector2 k);
+    ~Kometa() { delete sciezka; }
+
     Vector2 zwrocKierunek(){ return kierunek; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }

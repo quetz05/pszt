@@ -23,7 +23,9 @@ private:
     bool czakonczony;
 public:
     Symulation(int id);
-
+    ~Symulation() {
+        watek->terminate();
+        delete watek; }
     Vector2 dvGrav(Planeta *p, Kometa *k, double dt);
     bool HitTest(Planeta *p ,Kometa *k);
     bool krokSymulacji(double dt, Kometa *k);
