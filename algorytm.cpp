@@ -114,7 +114,7 @@ void Populacja::tworzNowaPopulacje()
     this->mutacja();
     this->tworzNowychOsobnikow();
 
-    std::vector <Kometa*> temp;
+    QList <Kometa*> temp;
 
     for(unsigned int j=0; j<osobniki.size(); j++)
         temp.push_back(osobniki[j]);
@@ -122,15 +122,26 @@ void Populacja::tworzNowaPopulacje()
     for(unsigned int i=0; i<potomki.size();i++)
         temp.push_back(potomki[i]);
 
-   /* std::sort(temp.front(), temp.back());
 
-    osobniki.clear();*/
+        for( int a=0; a<temp.size(); a++)
+            for( int b=0; b<temp.size(); b++)
+                if(temp[b]->czasZycia < temp[b+1]->czasZycia)
+                {
+                    Kometa *t;
+                    t = temp[b];
+                    temp[b] = temp[b+1];
+                    temp[b+1] = t;
+                }
 
-   /* for(unsigned int k=0; k<N; k++)
-        osobniki.push_back(temp[k]);*/
+    osobniki.clear();
 
+    for(unsigned int k=0; k<N; k++)
+        osobniki.push_back(temp[k]);
+
+    emit gotowe();
 
 }
+
 /**
  * @brief Populacja::oceniaj ocenianie
  */
@@ -170,15 +181,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
 double Populacja::losuj(int a, int b)
 {
-//    int min = 100*a;
-//    int max = 100*b;
-
-//    double losowa = rand()%(max-min+1)+min;
-
-//    double wylosuj = losowa/100.0f;
-
-//    return wylosuj;
-
     return ((double)((double)rand() / (double)RAND_MAX) * b) + a;
 }
 
