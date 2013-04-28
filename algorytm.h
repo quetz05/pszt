@@ -70,8 +70,7 @@ private:
     //metoda losująca liczbę z przedziału <a,b>
     static double losuj(int a, int b);
 
-   /* //funkcja porownujaca czas zycia osobnikow
-    static bool porownajCzasZycia(Kometa a, Kometa b);*/
+
 
     std::random_device rd;
     //generator liczb pseudolosowych (do rozkladu normalnego)
