@@ -87,7 +87,6 @@ void Populacja::mutacja()
 
 void Populacja::tworzNowychOsobnikow()
 {
-
     Vector2 kier;
     Vector2 sr;
 

@@ -112,8 +112,6 @@ void MainWindow::generujPlansze()
             x = ( rand() % (int)(800 - 2*prom) );
             y = ( rand() % (int)(600 - 2*prom) );
 
-            //qDebug() << "dodaje :: " << masa << " :: " << prom << " :: " << x << " :: " << y;
-
             kolo = new Planeta(Vector2(x, y), masa);
 
         } while (scena->collidingItems(kolo).count());
@@ -121,8 +119,6 @@ void MainWindow::generujPlansze()
         scena->addItem(kolo);
         sim[0]->dodajPlanete(kolo);
         planety.push_back(kolo);
-
-        qDebug() << "dodano planete ze wskaznikiem == " << kolo;
     }
 }
 
@@ -146,6 +142,8 @@ void MainWindow::symuluj()
     pop = new Populacja(&planety);
     connect(pop, SIGNAL(gotowe()), this, SLOT(narysuj()));
     pop->dawaj();
+
+    ui->guzikNastepna->setEnabled(true);
 }
 
 void MainWindow::nastepna()
