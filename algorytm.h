@@ -31,9 +31,6 @@ public:
     //potomki populacji  do oceny
     vector <Kometa*> potomki;
 
-    //nowa populacja
-    vector <Kometa*> noweOsobniki;
-
     void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
 
     //tworzy nowa populacje
@@ -72,6 +69,9 @@ private:
 
     //metoda losująca liczbę z przedziału <a,b>
     static double losuj(int a, int b);
+
+   /* //funkcja porownujaca czas zycia osobnikow
+    static bool porownajCzasZycia(Kometa a, Kometa b);*/
 
     std::random_device rd;
     //generator liczb pseudolosowych (do rozkladu normalnego)

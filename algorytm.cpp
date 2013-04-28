@@ -4,6 +4,7 @@
 #include <time.h>
 #include <iostream>
 #include <QDebug>
+#include <algorithm>
 
 
 
@@ -107,16 +108,26 @@ void Populacja::tworzNowychOsobnikow()
 
 void Populacja::tworzNowaPopulacje()
 {
-    if(!potomki.empty())
-    {
-        osobniki.clear();
-        osobniki = noweOsobniki;
-    }
 
     this->tworzSekwencje();
     this->krzyzowanie();
     this->mutacja();
     this->tworzNowychOsobnikow();
+
+    std::vector <Kometa*> temp;
+
+    for(unsigned int j=0; j<osobniki.size(); j++)
+        temp.push_back(osobniki[j]);
+
+    for(unsigned int i=0; i<potomki.size();i++)
+        temp.push_back(potomki[i]);
+
+   /* std::sort(temp.front(), temp.back());
+
+    osobniki.clear();*/
+
+   /* for(unsigned int k=0; k<N; k++)
+        osobniki.push_back(temp[k]);*/
 
 
 }
@@ -127,11 +138,11 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 {
     Symulation** sim = new Symulation* [k->size()];
 
-    for (int i = 0; i <k->size(); ++i) {
+    for (unsigned int i = 0; i <k->size(); ++i) {
         sim[i] = new Symulation(i);
         sim[i]->dodajGracza(k->at(i));
         sim[i]->ustawInteraktywne(false);
-        for (int j = 0; j < this->plansza->size(); ++j)
+        for (unsigned int j = 0; j < this->plansza->size(); ++j)
             sim[i]->dodajPlanete(plansza->at(j));
 
        // connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
@@ -139,10 +150,10 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
     }
 
-    for (int i = 0; i <k->size(); ++i) {
+    for (unsigned int i = 0; i <k->size(); ++i) {
         sim[i]->start();
     }
-    for (int i = 0; i <k->size(); ++i) {
+    for (unsigned int i = 0; i <k->size(); ++i) {
         while(!sim[i]->czyzakonczony())
             //QApplication::processEvents();
             this->thread()->msleep(100);
@@ -151,7 +162,7 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     /*
      *usuwanie symulacji
      */
-    for (int i = 0; i <k->size(); ++i) {
+    for (unsigned int i = 0; i <k->size(); ++i) {
         delete sim[i];
     }
     delete [] sim;
