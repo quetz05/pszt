@@ -16,11 +16,11 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
     this->plansza = p;
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(10,780),losuj(10,580)), Vector2(losuj(2,2),losuj(-2,2))));
+        osobniki.push_back(new Kometa(Vector2(losuj(10,780),losuj(10,580)), Vector2(losuj(-2, 2), losuj(-2, 2))));
 
         for(int j = 0; j<ARG; j++)
         {
-            double a =rozkladNorm(generator);
+            double a = rozkladNorm(generator);
             osobniki[i]->rozklady.push_back(a);
         }
 
@@ -126,15 +126,15 @@ void Populacja::tworzNowaPopulacje()
         temp.push_back(potomki[i]);
 
 
-        for( int a=0; a<temp.size(); a++)
-            for( int b=0; b<temp.size(); b++)
-                if(temp[b]->czasZycia < temp[b+1]->czasZycia)
-                {
-                    Kometa *t;
-                    t = temp[b];
-                    temp[b] = temp[b+1];
-                    temp[b+1] = t;
-                }
+    for( int a=0; a<temp.size() - 1; a++)
+        for( int b=0; b<temp.size() - 1; b++)
+            if(temp[b]->czasZycia < temp[b+1]->czasZycia)
+            {
+                Kometa *t;
+                t = temp[b];
+                temp[b] = temp[b+1];
+                temp[b+1] = t;
+            }
 
     osobniki.clear();
 
@@ -158,9 +158,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
         sim[i]->ustawInteraktywne(false);
         for (unsigned int j = 0; j < this->plansza->size(); ++j)
             sim[i]->dodajPlanete(plansza->at(j));
-
-       // connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
-         //       this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
 
     }
 
