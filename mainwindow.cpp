@@ -104,7 +104,6 @@ void MainWindow::generujPlansze()
 
     sim[0]->usunPlanety();
     planety.clear();
-
     for (int i = 0; i < ilePlanet; ++i) {
 
         do {
@@ -147,6 +146,7 @@ void MainWindow::symuluj()
     int czasDoc = czas.toInt();
 
     qDebug() << "====================== nowa Symulacja =======================";
+
 
     if (!pierwsza) {
         for (int i = 0; i < NUM_THREADS; ++i) {

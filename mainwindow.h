@@ -8,7 +8,7 @@
 #include "wiadomosc.h"
 #include "algorytm.h"
 
-#define NUM_THREADS 20
+#define NUM_THREADS 50
 
 namespace Ui {
     class MainWindow;

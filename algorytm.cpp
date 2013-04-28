@@ -10,11 +10,12 @@
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
 static double tau2 = 1 / (qSqrt(2 * N));
 
-Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
+Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(0,1)
 {
+    this->plansza = p;
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(-300,300),losuj(-300,300))));
+        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(2,2),losuj(-2,2))));
 
         for(int j = 0; j<ARG; j++)
         {
@@ -106,12 +107,54 @@ void Populacja::tworzNowychOsobnikow()
 
 void Populacja::tworzNowaPopulacje()
 {
+    if(!potomki.empty())
+    {
+        osobniki.clear();
+        osobniki = noweOsobniki;
+    }
+
     this->tworzSekwencje();
     this->krzyzowanie();
     this->mutacja();
     this->tworzNowychOsobnikow();
 
 
+}
+/**
+ * @brief Populacja::oceniaj ocenianie
+ */
+void Populacja::oceniaj(vector<Kometa *> *k)
+{
+    Symulation** sim = new Symulation* [k->size()];
+
+    for (int i = 0; i <k->size(); ++i) {
+        sim[i] = new Symulation(i);
+        sim[i]->dodajGracza(k->at(i));
+        sim[i]->ustawInteraktywne(false);
+        for (int j = 0; j < this->plansza->size(); ++j)
+            sim[i]->dodajPlanete(plansza->at(j));
+
+       // connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
+         //       this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
+
+    }
+
+    for (int i = 0; i <k->size(); ++i) {
+        sim[i]->start();
+    }
+    for (int i = 0; i <k->size(); ++i) {
+        while(!sim[i]->czyzakonczony())
+            //QApplication::processEvents();
+            this->thread()->msleep(100);
+    }
+
+    /*
+     *usuwanie symulacji
+     */
+    for (int i = 0; i <k->size(); ++i) {
+        delete sim[i];
+    }
+    delete [] sim;
 }
 
 double Populacja::losuj(int a, int b)

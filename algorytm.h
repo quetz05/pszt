@@ -3,6 +3,10 @@
 #include <cstdlib>
 #include "kometa.h"
 #include <random>
+#include "symulation.h"
+#include <QObject>
+
+
 
 #define N 10 /*liczba osobników w populacji*/
 #define ARG 4 /*liczba argumentów jednego osobnika*/
@@ -11,11 +15,12 @@ using namespace std;
 
 typedef vector<double> vectorDouble;
 
-class Populacja
+class Populacja : public QObject
 {
 
+    Q_OBJECT
 public:
-    Populacja();
+    Populacja(std::vector <Planeta*>*p);
     Populacja(vector <Kometa*> nowaPopulacja);
 
     //początkowi osobnicy populacji
@@ -23,7 +28,7 @@ public:
     //rozklady osobników
     vector <vector<double>> rozklady;
 
-    //potomki populacji
+    //potomki populacji  do oceny
     vector <Kometa*> potomki;
 
     //nowa populacja
@@ -33,11 +38,14 @@ public:
 
     //tworzy nowa populacje
     void tworzNowaPopulacje();
+    /**
+     * @brief oceniaj funkcja oceniajaca potomkow
+     */
+    void oceniaj(vector<Kometa*>* k);
 
-    double oceniaj();
 
-
-
+signals:
+    void gotowe();
 
 private:
 
@@ -68,6 +76,10 @@ private:
     //generator liczb pseudolosowych (do rozkladu normalnego)
     std::mt19937 generator;
     std::normal_distribution<> rozkladNorm;
+    /**
+     * @brief plansza wskaźnik na wektor planet który stanowi nasze środowisko obliczeniowe
+     */
+    std::vector <Planeta*>* plansza;
 };
 
 #endif // ALGORYTM_H
