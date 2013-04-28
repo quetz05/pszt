@@ -143,7 +143,7 @@ void MainWindow::graj()
 void MainWindow::symuluj()
 {
 
-    QString czas = ui->czasPole->text;
+    QString czas = ui->czasPole->text();
     int czasDoc = czas.toInt();
 
     qDebug() << "====================== nowa Symulacja =======================";
@@ -211,6 +211,29 @@ void MainWindow::symuluj()
 
 void MainWindow::nastepna()
 {
+
+}
+
+void MainWindow::narysuj()
+{
+    scena->clear();
+    scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, -1, -1, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(801, -1, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, 601, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+
+    for (int i = 0; i < ilePlanet; ++i) {
+        scena->addItem(planety[i]);
+    }
+
+    int ile = pop->osobniki.size();
+
+    for (int i = 0; i < ile; ++i) {
+        pop->osobniki[i]->narysujSciezke();
+        scena->addItem(pop->osobniki[i]);
+    }
+
+    scena->update(0, 0, 800, 600);
 
 }
 

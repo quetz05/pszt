@@ -6,6 +6,7 @@
 #include "kometascene.h"
 #include "symulation.h"
 #include "wiadomosc.h"
+#include "algorytm.h"
 
 #define NUM_THREADS 20
 
@@ -28,6 +29,8 @@ public slots:
     void nastepna();
     void tabela() {}
 
+    void narysuj();
+
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
     void startSim();
 
@@ -48,6 +51,8 @@ private:
 
     Symulation *sim[NUM_THREADS];
     Kometa *gracz[NUM_THREADS];
+
+    Populacja *pop;
 
     int counter;
     bool pierwsza;
