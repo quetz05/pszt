@@ -1,8 +1,10 @@
 #ifndef KOMETA_H
 #define KOMETA_H
 
+#include <vector>
 #include "planeta.h"
 #include <QPainterPath>
+
 
 class Kometa : public Planeta
 {
@@ -13,7 +15,9 @@ public:
     Kometa(Vector2 sr, Vector2 k);
     ~Kometa() { delete sciezka; }
 
+
     Vector2 zwrocKierunek(){ return kierunek; }
+    Vector2 zwrocPozycje(){ return pozPocz; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
@@ -23,6 +27,10 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    std::vector <double> rozklady;
+    double czasZycia;
+
+
 private:
     Vector2 pozPocz;
     Vector2 kierunek;
@@ -31,5 +39,6 @@ private:
     bool interaktywne;
     bool rysujSciezke;
     int counter;
+
 };
 #endif // KOMETA_H
