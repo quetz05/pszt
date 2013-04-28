@@ -14,7 +14,7 @@ Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
 {
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(-300,300),losuj(-300,300))));
+        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(2,2),losuj(-2,2))));
 
         for(int j = 0; j<ARG; j++)
         {
@@ -106,6 +106,12 @@ void Populacja::tworzNowychOsobnikow()
 
 void Populacja::tworzNowaPopulacje()
 {
+    if(!potomki.empty())
+    {
+        osobniki.clear();
+        osobniki = noweOsobniki;
+    }
+
     this->tworzSekwencje();
     this->krzyzowanie();
     this->mutacja();
