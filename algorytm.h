@@ -16,6 +16,7 @@
 
 using namespace std;
 
+typedef vector<double> vectorDouble;
 
 class Populacja
 {
@@ -35,6 +36,8 @@ public:
     vector <vector<double>> noweRozklady;
 
 
+    void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
+
 
     //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
     void tworzSekwencje();
@@ -50,6 +53,9 @@ public:
 
 
 private:
+
+    //czas ktory uznajemy za nieskonczonosc
+    int czasDocelowy;
 
     //sekwencja rodziców do rozmnażania
     vector <Kometa*> sekwencjaRodzicow;
