@@ -37,22 +37,28 @@ void KometaScene::mousePressEvent(QMouseEvent *event)
         linia = new QGraphicsLineItem(klikX, klikY, klikX, klikY);
         this->scene()->addItem(linia);
     }
+
+    QGraphicsView::mousePressEvent(event);
 }
 
 void KometaScene::mouseReleaseEvent(QMouseEvent *event)
 {
-    QPointF punkt = mapToScene(event->pos().x() , event->pos().y());
+    if (trybGry) {
+        QPointF punkt = mapToScene(event->pos().x() , event->pos().y());
 
-    puscX = punkt.x();
-    puscY = punkt.y();
+        puscX = punkt.x();
+        puscY = punkt.y();
 
-    this->scene()->removeItem(linia);
-    trybGry = false;
-    drag = false;
+        this->scene()->removeItem(linia);
+        trybGry = false;
+        drag = false;
 
-    qDebug() << "czysty == " << (klikX - puscX) << " :: " << (klikY - puscY);
+        qDebug() << "czysty == " << (klikX - puscX) << " :: " << (klikY - puscY);
 
-    gracz->ustawKierunek(Vector2((klikX - puscX)/100, (klikY - puscY)/100));
+        gracz->ustawKierunek(Vector2((klikX - puscX)/100, (klikY - puscY)/100));
 
-    emit graczPuscil();
+        emit graczPuscil();
+    }
+
+    QGraphicsView::mouseReleaseEvent(event);
 }
