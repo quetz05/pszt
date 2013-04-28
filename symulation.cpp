@@ -140,7 +140,7 @@ void Symulation::doWork()
         current_time = zegar.elapsed();
         if (interaktywne)
             watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-        ++couter;
+        //++couter;
     }
 
     qDebug() << "watek << " << ident << " << stop ------ !!!! ------ ";
