@@ -20,7 +20,7 @@ private:
     QThread *watek;
     bool interaktywne;
     int ident;
-
+    bool czakonczony;
 public:
     Symulation(int id);
 
@@ -30,6 +30,7 @@ public:
     void dodajPlanete(Planeta *nowa);
     void dodajGracza(Kometa *nowy) { gracz = nowy; }
     void usunPlanety();
+    bool czyzakonczony();
 
     void ustawInteraktywne(bool enable) { interaktywne = enable; }
 
@@ -39,6 +40,7 @@ signals:
 public slots:
     void start();
     void doWork();
+    void zakonczony();
 };
 
 #endif // SYMULATION_H

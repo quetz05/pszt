@@ -14,8 +14,9 @@ Symulation::Symulation(int id)
 {
     watek = new QThread();
     connect(watek, SIGNAL(started()), this, SLOT(doWork()));
+    connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
     moveToThread(watek);
-
+    czakonczony = false;
     interaktywne = true;
     ident = id;
 
@@ -120,28 +121,39 @@ void Symulation::start()
     watek->start();
 }
 
+bool Symulation::czyzakonczony()
+{
+    return czakonczony;
+}
+
 void Symulation::doWork()
 {
     qDebug() << "watek << " << ident << " << start";
     QTime zegar;
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
-
-    while (1) {
+    long int couter =0;
+    while (couter <1000000) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
         if (interaktywne)
             watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+        ++couter;
     }
 
     qDebug() << "watek << " << ident << " << stop ------ !!!! ------ ";
-
+    this->czakonczony = true;
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
     }
 
     qDebug() << "watek << " << ident << " << narysowal sciezke ";
+}
+
+void Symulation::zakonczony()
+{
+    czakonczony = true;
 }
