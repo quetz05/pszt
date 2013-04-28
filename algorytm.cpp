@@ -155,7 +155,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     }
     for (unsigned int i = 0; i <k->size(); ++i) {
         while(!sim[i]->czyzakonczony())
-            //QApplication::processEvents();
             this->thread()->msleep(100);
     }
 
@@ -170,15 +169,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
 double Populacja::losuj(int a, int b)
 {
-//    int min = 100*a;
-//    int max = 100*b;
-
-//    double losowa = rand()%(max-min+1)+min;
-
-//    double wylosuj = losowa/100.0f;
-
-//    return wylosuj;
-
     return ((double)((double)rand() / (double)RAND_MAX) * b) + a;
 }
 
