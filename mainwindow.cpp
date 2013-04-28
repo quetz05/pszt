@@ -143,7 +143,7 @@ void MainWindow::graj()
 void MainWindow::symuluj()
 {
 
-    QString czas = ui->czasPole->text;
+    QString czas = ui->czasPole->text();
     int czasDoc = czas.toInt();
 
     qDebug() << "====================== nowa Symulacja =======================";
