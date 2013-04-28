@@ -25,7 +25,7 @@ public slots:
     void generujPlansze();
     void graj();
     void symuluj();
-    void nastepna() {}
+    void nastepna();
     void tabela() {}
 
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->guzikGraj, SIGNAL(clicked()), this, SLOT(graj()));
     connect(ui->rysownik, SIGNAL(graczPuscil()), this, SLOT(startSim()));
     connect(ui->guzikSymuluj, SIGNAL(clicked()), this, SLOT(symuluj()));
+    connect(ui->guzikNastepna, SIGNAL(clicked()), this, SLOT(nastepna()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -141,6 +142,9 @@ void MainWindow::graj()
 void MainWindow::symuluj()
 {
 
+    QString czas = ui->czasPole->text;
+    int czasDoc = czas.toInt();
+
     qDebug() << "====================== nowa Symulacja =======================";
 
 
@@ -203,6 +207,11 @@ void MainWindow::symuluj()
             //QApplication::processEvents();
             this->thread()->msleep(100);
     }
+}
+
+void MainWindow::nastepna()
+{
+
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
