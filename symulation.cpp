@@ -116,6 +116,7 @@ void Symulation::usunPlanety()
 
 void Symulation::start()
 {
+    qDebug() << "got it";
     watek->start();
 }
 

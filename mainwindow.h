@@ -7,7 +7,7 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 
-#define NUM_THREADS 20
+#define NUM_THREADS 10
 
 namespace Ui {
     class MainWindow;
@@ -16,7 +16,7 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public slots:
     void ustawLiczbePlanet(int wartosc);
     void ustawMinWage(int wartosc);
@@ -34,6 +34,9 @@ public slots:
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+signals:
+    void ruszaj();
 
 private:
     Ui::MainWindow *ui;

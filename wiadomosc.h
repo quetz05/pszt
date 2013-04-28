@@ -10,6 +10,7 @@ typedef enum
 
 typedef struct Wiadomosc
 {
+    Wiadomosc() {}
     Wiadomosc(qreal nX, qreal nY, TYP_WIADOMOSCI nTyp):
         x(nX), y(nY), typ(nTyp) {}
 

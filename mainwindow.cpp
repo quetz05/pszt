@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
         sim[i] = NULL;
     }
 
+    qRegisterMetaType<Wiadomosc>("Wiadomosc");
+
     connect(ui->liczbaPlanet, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbePlanet(int)));
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
     connect(ui->maksWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMaksWage(int)));
@@ -153,28 +155,39 @@ void MainWindow::symuluj()
             sim[i]->dodajPlanete(planety[j]);
 
         connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
-                this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
+                this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
+
     }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
+        connect(this, SIGNAL(ruszaj()), sim[i], SLOT(start()));
+        emit ruszaj();
         sim[i]->start();
-        this->thread()->msleep(100);
+        disconnect(this, SIGNAL(ruszaj()), sim[i], SLOT(start()));
+        //this->thread()->msleep(10);
     }
+
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
-        case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y));
-        case zakonczyl : ++counter;
+        case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
+        case zakonczyl : ++counter; break;
     }
 
     if (counter == NUM_THREADS) {
+
+        qDebug() << "------------------- koniec all --------------------";
+
         for (int i = 0; i < NUM_THREADS; ++i) {
             gracz[i]->narysujSciezke();
-            scena->update(0, 0, 800, 600);
+            //scena->update(0, 0, 800, 600);
         }
+
+        scena->update(0, 0, 800, 600);
     }
+
 }
 
 void MainWindow::startSim() {

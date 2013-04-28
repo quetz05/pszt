@@ -12,7 +12,6 @@
 
 class Symulation : public QObject
 {
-
     Q_OBJECT
 
 private:
@@ -31,7 +30,6 @@ public:
     void dodajPlanete(Planeta *nowa);
     void dodajGracza(Kometa *nowy) { gracz = nowy; }
     void usunPlanety();
-    void start();
 
     void ustawInteraktywne(bool enable) { interaktywne = enable; }
 
@@ -39,7 +37,7 @@ signals:
     void powiadom(Kometa *naCzym, Wiadomosc wiad);
 
 public slots:
-
+    void start();
     void doWork();
 };
 
