@@ -14,23 +14,22 @@ Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
 {
     for(int i = 0; i < N; i++)
     {
-        osobniki.push_back(new Kometa(Vector2(losuj(0,800),losuj(0,600)), Vector2(losuj(-300,300),losuj(-300,300))));
-        //wektor rozkładów osobnika
-        vector <double> rozOs;
+        osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(-300,300),losuj(-300,300))));
+
         for(int j = 0; j<ARG; j++)
         {
             double a =rozkladNorm(generator);
-            rozOs.push_back(a);
+            osobniki[i]->rozklady.push_back(a);
         }
 
-        rozklady.push_back(rozOs);
     }
 }
 
-Populacja::Populacja(vector <Kometa*> nowaPopulacja, vector <vector<double>> noweRozklady)
+Populacja::Populacja(vector <Kometa*> nowaPopulacja)
 {
-
+    osobniki = nowaPopulacja;
 }
+
 
 void Populacja::tworzSekwencje()
 {
@@ -40,8 +39,6 @@ void Populacja::tworzSekwencje()
     {
         indeks  = losuj(0,10);
         sekwencjaRodzicow.push_back(osobniki[indeks]);
-        rozkladySekwencji.push_back(rozklady[indeks]);
-
         i++;
 
     }
@@ -51,20 +48,17 @@ void Populacja::krzyzowanie()
 {
     Vector2 sr;
     Vector2 kier;
-    vector <double> rozkl;
 
     for(unsigned int i = 0; i < (sekwencjaRodzicow.size()-1); i++)
     {
         kier = (sekwencjaRodzicow[i]->zwrocKierunek()+sekwencjaRodzicow[i+1]->zwrocKierunek())/2;
         sr = (sekwencjaRodzicow[i]->zwrocSrodek()+sekwencjaRodzicow[i+1]->zwrocSrodek())/2;
 
-        for(int j=0; j< ARG; j++)
-        {
-            rozkl.push_back(rozkladySekwencji[i][j]);
-        }
-
-        rozkladyZarodkow.push_back(rozkl);
         zarodki.push_back(new Kometa(sr, kier));
+
+        for(int j=0; j< ARG; j++)
+            zarodki.back()->rozklady.push_back((sekwencjaRodzicow[i]->rozklady[j]+ sekwencjaRodzicow[i+1]->rozklady[j])/2);
+
     }
 
 }
@@ -75,54 +69,49 @@ void Populacja::mutacja()
     double xi = 0;
 
 
-    for(unsigned int i = 0; i<rozkladyZarodkow.size(); i++)
+    for(unsigned int i = 0; i<zarodki.size(); i++)
     {
        xi = rozkladNorm(generator);
 
-       double odch;
        vector <double> rozk;
 
-       for(unsigned int j=0; j<rozkladyZarodkow[i].size(); j++)
-       {
-                 odch = rozkladyZarodkow[i][j]*qExp(tau2*xi + tau*rozkladNorm(generator));
-                 rozk.push_back(odch);
-       }
+       for(unsigned int j=0; j<ARG; j++)
+                 rozk.push_back(zarodki[i]->rozklady[j]*qExp(tau2*xi + tau*rozkladNorm(generator)));
 
-       noweRozklady.push_back(rozk);
+       rozkladyZarodkow.push_back(rozk);
     }
 
 }
 
 void Populacja::tworzNowychOsobnikow()
 {
-
-    this->mutacja();
-
+\
     Vector2 kier;
     Vector2 sr;
 
-    for(int i=0; i<N;i++)
+    for(unsigned int i=0; i<zarodki.size();i++)
     {
         sr.x = zarodki[i]->zwrocSrodek().x + rozkladNorm(generator)*rozkladyZarodkow[i][0];
         sr.y = zarodki[i]->zwrocSrodek().y + rozkladNorm(generator)*rozkladyZarodkow[i][1];
         kier.x = zarodki[i]->zwrocKierunek().x + rozkladNorm(generator)*rozkladyZarodkow[i][2];
         kier.y = zarodki[i]->zwrocKierunek().y + rozkladNorm(generator)*rozkladyZarodkow[i][3];
 
-        nowiOsobnicy.push_back(new Kometa(sr, kier));
+        potomki.push_back(new Kometa(sr, kier));
+
+        for(unsigned int j=0; j<ARG; j++)
+            potomki.back()->rozklady.push_back(rozkladyZarodkow[i][j]);
     }
 }
 
 
 void Populacja::tworzNowaPopulacje()
 {
-    osobniki.clear();
-    rozklady.clear();
+    this->tworzSekwencje();
+    this->krzyzowanie();
+    this->mutacja();
+    this->tworzNowychOsobnikow();
 
-    for(int i = 0; i<N; i++)
-    {
-        osobniki.push_back(nowiOsobnicy[i]);
-        rozklady.push_back(noweRozklady[i]);
-    }
+
 }
 
 double Populacja::losuj(int a, int b)

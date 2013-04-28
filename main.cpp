@@ -17,31 +17,27 @@ int main(int argc, char *argv[])
 
     for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
     {
-        cout<<alg.osobniki[i]->zwrocKierunek().x<<" ";
-        cout<<alg.osobniki[i]->zwrocKierunek().y<<endl;
+        cout<<alg.osobniki[i]->zwrocPozycje().x<<" ";
+        cout<<alg.osobniki[i]->zwrocPozycje().y<<endl;
 
         for(int j = 0; j<ARG; j++)
-            cout<<alg.rozklady[i][j]<<" ";
+            cout<<alg.osobniki[i]->rozklady[j]<<" ";
         cout<<endl;
     }
 
-    cout<<endl;
-
-    alg.tworzSekwencje();
-    alg.krzyzowanie();
-    alg.tworzNowychOsobnikow();
     alg.tworzNowaPopulacje();
 
-    for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
+    cout<<endl;
+
+    for(unsigned int i = 0; i < alg.potomki.size(); i++ )
     {
-        cout<<alg.osobniki[i]->zwrocKierunek().x<<" ";
-        cout<<alg.osobniki[i]->zwrocKierunek().y<<endl;
+        cout<<alg.potomki[i]->zwrocPozycje().x<<" ";
+        cout<<alg.potomki[i]->zwrocPozycje().y<<endl;
+
         for(int j = 0; j<ARG; j++)
-            cout<<alg.rozklady[i][j]<<" ";
+            cout<<alg.potomki[i]->rozklady[j]<<" ";
         cout<<endl;
     }
-
-    cout<<endl;
 
     QApplication a(argc, argv);
     MainWindow w;
