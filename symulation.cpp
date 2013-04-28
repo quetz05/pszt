@@ -17,7 +17,7 @@ Symulation::Symulation(int id)
     connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
     moveToThread(watek);
     czakonczony = false;
-    interaktywne = true;
+    interaktywne = false;
     ident = id;
 
 }
@@ -131,6 +131,7 @@ void Symulation::doWork()
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
+    gracz->czasZycia = 0;
     while (couter < 1000000) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
@@ -138,11 +139,10 @@ void Symulation::doWork()
         current_time = zegar.elapsed();
         if (interaktywne)
             watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-        //++couter;
+        ++couter;
     }
 
     this->czakonczony = true;
-    qDebug() << "zakonczono :: czasZycia == " << gracz->czasZycia;
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
