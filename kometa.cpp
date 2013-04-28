@@ -46,8 +46,8 @@ void Kometa::ustawPozycje(Vector2 p) {
 
         if (!(counter % 5))
             sciezka->lineTo(p.x, p.y);
-    }
-    this->setRect(boundingRect());
+    } else
+        this->setRect(boundingRect());
 }
 
 void Kometa::narysujSciezke()
