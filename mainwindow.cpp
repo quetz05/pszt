@@ -141,7 +141,8 @@ void MainWindow::symuluj()
 {
     pop = new Populacja(&planety);
     connect(pop, SIGNAL(gotowe()), this, SLOT(narysuj()));
-    pop->dawaj();
+
+    narysuj();
 
     ui->guzikNastepna->setEnabled(true);
 }
@@ -153,6 +154,8 @@ void MainWindow::nastepna()
 
 void MainWindow::narysuj()
 {
+
+    qDebug() << "narysuj()";
 
     QList<QGraphicsItem*> lista = scena->items();
 

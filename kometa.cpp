@@ -12,8 +12,9 @@ Kometa::Kometa(Vector2 sr, Vector2 k)
     kierunek = k;
     sciezka = new QPainterPath();
     sciezka->moveTo(sr.x, sr.y);
-    interaktywne = true;
+    interaktywne = false;
     rysujSciezke = false;
+    czasZycia = 0;
     counter = 0;
     kolor = QColor::fromRgb(rand() % 255, rand() % 255, rand() % 255);
     this->setRect(boundingRect());

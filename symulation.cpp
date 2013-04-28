@@ -142,6 +142,7 @@ void Symulation::doWork()
     }
 
     this->czakonczony = true;
+    qDebug() << "zakonczono :: czasZycia == " << gracz->czasZycia;
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
