@@ -15,7 +15,7 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public slots:
     void ustawLiczbePlanet(int wartosc);
     void ustawMinWage(int wartosc);
@@ -33,6 +33,9 @@ public slots:
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+signals:
+    void ruszaj();
 
 private:
     Ui::MainWindow *ui;
