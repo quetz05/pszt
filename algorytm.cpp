@@ -25,6 +25,8 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
         }
 
     }
+
+    oceniaj(&osobniki);
 }
 
 Populacja::Populacja(vector <Kometa*> nowaPopulacja)
@@ -112,6 +114,8 @@ void Populacja::tworzNowaPopulacje()
     this->krzyzowanie();
     this->mutacja();
     this->tworzNowychOsobnikow();
+
+    oceniaj(&potomki);
 
     QList <Kometa*> temp;
 
