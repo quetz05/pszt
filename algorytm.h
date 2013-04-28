@@ -1,18 +1,11 @@
 #ifndef ALGORYTM_H
 #define ALGORYTM_H
-#include <vector>
 #include <cstdlib>
 #include "kometa.h"
 #include <random>
 
-
-
 #define N 10 /*liczba osobników w populacji*/
 #define ARG 4 /*liczba argumentów jednego osobnika*/
-
-/**dodanie pair do vectora**/
-/**likwidacja zbędnych wektorów**/
-/**do 1 funkcji**/
 
 using namespace std;
 
@@ -22,47 +15,45 @@ class Populacja
 
 public:
     Populacja();
-    Populacja(vector <Kometa*> nowaPopulacja, vector <vector<double>> noweRozklady);
+    Populacja(vector <Kometa*> nowaPopulacja);
 
     //początkowi osobnicy populacji
     vector <Kometa*> osobniki;
     //rozklady osobników
     vector <vector<double>> rozklady;
 
+    //potomki populacji
+    vector <Kometa*> potomki;
 
+    //nowa populacja
+    vector <Kometa*> noweOsobniki;
 
-    vector <Kometa*> nowiOsobnicy;
-    vector <vector<double>> noweRozklady;
-
-
-
-    //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
-    void tworzSekwencje();
-    //krzyżuje osobniki z sekwencji, tworząc zarodki
-    void krzyzowanie();
-
-    //towrzy nowych osobników na podstawie rozkładów
-    void tworzNowychOsobnikow();
     //tworzy nowa populacje
     void tworzNowaPopulacje();
 
     double oceniaj();
 
 
+
+
 private:
 
     //sekwencja rodziców do rozmnażania
     vector <Kometa*> sekwencjaRodzicow;
-    //rozklady osobników
-    vector <vector<double>> rozkladySekwencji;
-
     //zardoki
     vector <Kometa*> zarodki;
-    //rozklady osobników
+    //rozkłady zarodków
     vector <vector<double>> rozkladyZarodkow;
 
+
+    //losuje sekwencje rodziców do rozmnażania - (N+1) osobników
+    void tworzSekwencje();
+    //krzyżuje osobniki z sekwencji, tworząc zarodki
+    void krzyzowanie();
     //mutuje zarodek tworząc nowe rozklady
     void mutacja();
+    //towrzy nowych osobników na podstawie rozkładów
+    void tworzNowychOsobnikow();
 
     //metoda losująca liczbę z przedziału <a,b>
     static double losuj(int a, int b);
