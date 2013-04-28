@@ -40,6 +40,7 @@ public:
      */
     void oceniaj(vector<Kometa*>* k);
 
+    void dawaj() { emit gotowe(); }
 
 signals:
     void gotowe();
@@ -79,7 +80,7 @@ private:
     /**
      * @brief plansza wskaźnik na wektor planet który stanowi nasze środowisko obliczeniowe
      */
-    std::vector <Planeta*>* plansza;
+    std::vector <Planeta*> *plansza;
 };
 
 #endif // ALGORYTM_H

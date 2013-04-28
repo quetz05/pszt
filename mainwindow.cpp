@@ -121,6 +121,8 @@ void MainWindow::generujPlansze()
         scena->addItem(kolo);
         sim[0]->dodajPlanete(kolo);
         planety.push_back(kolo);
+
+        qDebug() << "dodano planete ze wskaznikiem == " << kolo;
     }
 }
 
@@ -141,76 +143,43 @@ void MainWindow::graj()
 
 void MainWindow::symuluj()
 {
-
-    QString czas = ui->czasPole->text();
-    int czasDoc = czas.toInt();
-
-    qDebug() << "====================== nowa Symulacja =======================";
-
-
-    if (!pierwsza) {
-        for (int i = 0; i < NUM_THREADS; ++i) {
-            scena->removeItem(gracz[i]);
-            delete gracz[i];
-            gracz[i] = NULL;
-            delete sim[i];
-            sim[i] = NULL;
-        }
-
-        counter = 0;
-        scena->update(0, 0, 800, 600);
-    }
-
-    pierwsza = false;
-
-    for (int i = 0; i < NUM_THREADS; ++i) {
-
-        do {
-
-            qDebug() << "tworze gracz == " << i;
-
-            gracz[i] = new Kometa(Vector2(rand() % 780, rand() % 580),
-                                  Vector2( ((rand() % 3) - 2),((rand() % 3) - 2)));
-            gracz[i]->ustawInteraktywne(false);
-            gracz[i]->ustawKolor(QColor::fromRgb(rand()%256, rand()%256, rand()%256));
-
-            qDebug() << "sprawdzam polozenie";
-            QList<QGraphicsItem*> s = scena->collidingItems(gracz[i]);
-            qDebug() << s  << " [][] wskaznior == " << &s;
-            qDebug() << "liczba << " << s.count();
-
-        } while (scena->collidingItems(gracz[i]).count());
-
-        qDebug() << "dodaje gracz == " << i;
-        scena->addItem(gracz[i]);
-    }
-
-    qDebug() << "dodawnaie gracz OK!!!!! ----------------- ";
-
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        sim[i] = new Symulation(i);
-        sim[i]->dodajGracza(gracz[i]);
-        sim[i]->ustawInteraktywne(false);
-        for (int j = 0; j < planety.size(); ++j)
-            sim[i]->dodajPlanete(planety[j]);
-
-        connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
-                this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
-
-    }
-
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        sim[i]->start();
-    }
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        while(!sim[i]->czyzakonczony())
-            //QApplication::processEvents();
-            this->thread()->msleep(100);
-    }
+    pop = new Populacja(&planety);
+    connect(pop, SIGNAL(gotowe()), this, SLOT(narysuj()));
+    pop->dawaj();
 }
 
 void MainWindow::nastepna()
 {
+    pop->tworzNowaPopulacje();
+}
+
+void MainWindow::narysuj()
+{
+
+    scena->clear();
+    scena->addLine(-1, -1, 801, -1, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, -1, -1, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(801, -1, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+    scena->addLine(-1, 601, 801, 601, QPen(QColor::fromRgb(255, 255, 255)));
+
+    qDebug() << "ilosc planet == " << planety.size();
+    qDebug() << "wskaznior na pierwsza == " << &(planety[0]);
+
+    planety[0]->zwrocSrodek();
+
+    /*for (int i = 0; i < ilePlanet; ++i) {
+        qDebug() << "dodaje planete == " << i;
+        scena->addItem(planety[i]);
+    }*/
+
+    int ile = pop->osobniki.size();
+
+    for (int i = 0; i < ile; ++i) {
+        pop->osobniki[i]->narysujSciezke();
+        scena->addItem(pop->osobniki[i]);
+    }
+
+    scena->update(0, 0, 800, 600);
 
 }
 
