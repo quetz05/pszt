@@ -15,7 +15,7 @@ Kometa::Kometa(Vector2 sr, Vector2 k)
     interaktywne = true;
     rysujSciezke = false;
     counter = 0;
-    kolor = QColor::fromRgb(0xcc, 0x67, 0x33);
+    kolor = QColor::fromRgb(rand() % 255, rand() % 255, rand() % 255);
     this->setRect(boundingRect());
 }
 
