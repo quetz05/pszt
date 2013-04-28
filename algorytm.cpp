@@ -4,14 +4,16 @@
 #include <time.h>
 #include <iostream>
 #include <QDebug>
+#include <algorithm>
 
 
 
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
 static double tau2 = 1 / (qSqrt(2 * N));
 
-Populacja::Populacja() : generator(rd()), rozkladNorm(0,1)
+Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(0,1)
 {
+    this->plansza = p;
     for(int i = 0; i < N; i++)
     {
         osobniki.push_back(new Kometa(Vector2(losuj(10,800),losuj(10,600)), Vector2(losuj(2,2),losuj(-2,2))));
@@ -106,18 +108,64 @@ void Populacja::tworzNowychOsobnikow()
 
 void Populacja::tworzNowaPopulacje()
 {
-    if(!potomki.empty())
-    {
-        osobniki.clear();
-        osobniki = noweOsobniki;
-    }
 
     this->tworzSekwencje();
     this->krzyzowanie();
     this->mutacja();
     this->tworzNowychOsobnikow();
 
+    std::vector <Kometa*> temp;
 
+    for(unsigned int j=0; j<osobniki.size(); j++)
+        temp.push_back(osobniki[j]);
+
+    for(unsigned int i=0; i<potomki.size();i++)
+        temp.push_back(potomki[i]);
+
+   /* std::sort(temp.front(), temp.back());
+
+    osobniki.clear();*/
+
+   /* for(unsigned int k=0; k<N; k++)
+        osobniki.push_back(temp[k]);*/
+
+
+}
+/**
+ * @brief Populacja::oceniaj ocenianie
+ */
+void Populacja::oceniaj(vector<Kometa *> *k)
+{
+    Symulation** sim = new Symulation* [k->size()];
+
+    for (unsigned int i = 0; i <k->size(); ++i) {
+        sim[i] = new Symulation(i);
+        sim[i]->dodajGracza(k->at(i));
+        sim[i]->ustawInteraktywne(false);
+        for (unsigned int j = 0; j < this->plansza->size(); ++j)
+            sim[i]->dodajPlanete(plansza->at(j));
+
+       // connect(sim[i], SIGNAL(powiadom(Kometa*,Wiadomosc)),
+         //       this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
+
+    }
+
+    for (unsigned int i = 0; i <k->size(); ++i) {
+        sim[i]->start();
+    }
+    for (unsigned int i = 0; i <k->size(); ++i) {
+        while(!sim[i]->czyzakonczony())
+            //QApplication::processEvents();
+            this->thread()->msleep(100);
+    }
+
+    /*
+     *usuwanie symulacji
+     */
+    for (unsigned int i = 0; i <k->size(); ++i) {
+        delete sim[i];
+    }
+    delete [] sim;
 }
 
 double Populacja::losuj(int a, int b)

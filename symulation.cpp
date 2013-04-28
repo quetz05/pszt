@@ -94,7 +94,7 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
     //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
     Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
 
-
+    k->czasZycia+=dt;
 
 
     if (interaktywne)
@@ -138,7 +138,7 @@ void Symulation::doWork()
         current_time = zegar.elapsed();
         if (interaktywne)
             watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-        ++couter;
+        //++couter;
     }
 
     this->czakonczony = true;
