@@ -159,7 +159,7 @@ void MainWindow::symuluj()
     connect(this, SIGNAL(next()), pop, SLOT(dzialaj()));
     connect(pop, SIGNAL(nadajWiadomosc(ProstaWiadomosc)), this, SLOT(odbierzProsta(ProstaWiadomosc)));
 
-    narysuj();
+    pop->generujPierwsza();
 
     ui->guzikNastepna->setEnabled(true);
     ui->guzikTabela->setEnabled(true);

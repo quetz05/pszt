@@ -32,6 +32,8 @@ public:
 
     void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
 
+    void generujPierwsza();
+
     /**
      * @brief oceniaj funkcja oceniajaca potomkow
      */

@@ -21,6 +21,13 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
     mux->lock();
 
     this->plansza = p;
+
+    watek->start();
+}
+
+
+void Populacja::generujPierwsza()
+{
     for(int i = 0; i < N; i++)
     {
         osobniki.push_back(new Kometa(Vector2(losuj(10,780),losuj(10,580)), Vector2(losuj(-2, 2), losuj(-2, 2))));
@@ -35,14 +42,13 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
 
     oceniaj(&osobniki);
 
-    watek->start();
+    emit gotowe();
 }
 
 Populacja::Populacja(vector <Kometa*> nowaPopulacja)
 {
     osobniki = nowaPopulacja;
 }
-
 
 void Populacja::tworzSekwencje()
 {
