@@ -39,7 +39,7 @@
       <x>850</x>
       <y>0</y>
       <width>251</width>
-      <height>601</height>
+      <height>643</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="topUklad">
@@ -231,7 +231,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>1 x 10 &lt;sup&gt;24 &lt;/sup&gt; kg</string>
+            <string>10 x 10 &lt;sup&gt;24 &lt;/sup&gt; kg</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -276,7 +276,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>1 x 10 &lt;sup&gt; 24 &lt;/sup&gt; kg</string>
+            <string>10 x 10 &lt;sup&gt; 24 &lt;/sup&gt; kg</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -332,6 +332,48 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelPostep">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="postep">
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="textDirection">
+        <enum>QProgressBar::TopToBottom</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

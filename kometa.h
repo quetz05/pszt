@@ -25,6 +25,8 @@ public:
     void ustawKolor(QColor k) { kolor = k; }
     void dodajOstatni();
 
+    QString toString();
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     std::vector <double> rozklady;
@@ -33,6 +35,7 @@ public:
 
 private:
     Vector2 pozPocz;
+    Vector2 kierPocz;
     Vector2 kierunek;
     QPainterPath *sciezka;
     QColor kolor;

@@ -27,11 +27,12 @@ public slots:
     void graj();
     void symuluj();
     void nastepna();
-    void tabela() {}
+    void tabela();
 
     void narysuj();
 
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
+    void odbierzProsta(ProstaWiadomosc wiad);
     void startSim();
 
 public:
@@ -40,6 +41,7 @@ public:
 
 signals:
     void ruszaj();
+    void next();
 
 private:
     Ui::MainWindow *ui;

@@ -10,6 +10,7 @@ Kometa::Kometa(Vector2 sr, Vector2 k)
     pozPocz = sr;
     promien = 5;
     kierunek = k;
+    kierPocz = k;
     sciezka = new QPainterPath();
     sciezka->moveTo(sr.x, sr.y);
     interaktywne = false;
@@ -46,8 +47,8 @@ void Kometa::ustawPozycje(Vector2 p) {
 
         if (!(counter % 5))
             sciezka->lineTo(p.x, p.y);
-    }
-    this->setRect(boundingRect());
+    } else
+        this->setRect(boundingRect());
 }
 
 void Kometa::narysujSciezke()
@@ -58,4 +59,13 @@ void Kometa::narysujSciezke()
 void Kometa::dodajOstatni()
 {
     sciezka->lineTo(srodek.x, srodek.y);
+}
+
+QString Kometa::toString()
+{
+    return QString("Pozycja początkowa : ") % QString::number(pozPocz.x) %
+            QString(" x ") % QString::number(pozPocz.y) %
+            QString("<br>Prędkość początkowa : ") % QString::number(kierPocz.x) %
+            QString(" x ") % QString::number(kierPocz.y) %
+            QString("<br>Czas życia = ") % QString::number(czasZycia);
 }

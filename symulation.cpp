@@ -12,10 +12,10 @@ using namespace std;
 
 Symulation::Symulation(int id)
 {
-    watek = new QThread();
-    connect(watek, SIGNAL(started()), this, SLOT(doWork()));
-    connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
-    moveToThread(watek);
+    //watek = new QThread();
+    //connect(watek, SIGNAL(started()), this, SLOT(doWork()));
+    //connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
+    //moveToThread(watek);
     czakonczony = false;
     interaktywne = false;
     ident = id;
@@ -84,10 +84,10 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
         if(this->HitTest(*it,k)) return false;
     }
 
-    if(k->zwrocSrodek().x-k->zwrocPromien() <= 0 || k->zwrocSrodek().x+k->zwrocPromien() >= 800)
+    if(k->zwrocKierunek().x * dt + k->zwrocSrodek().x-k->zwrocPromien() <= 0 || k->zwrocKierunek().x * dt + k->zwrocSrodek().x+k->zwrocPromien() >= 800)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x * (-1), k->zwrocKierunek().y) );
 
-    if(k->zwrocSrodek().y- k->zwrocPromien() <= 0 || k->zwrocSrodek().y +k->zwrocPromien() >= 600)
+    if(k->zwrocKierunek().y * dt + k->zwrocSrodek().y- k->zwrocPromien() <= 0 || k->zwrocKierunek().y * dt + k->zwrocSrodek().y+k->zwrocPromien() >= 600)
         k->ustawKierunek( Vector2( k->zwrocKierunek().x, k->zwrocKierunek().y * (-1) ) );
 
 
@@ -115,42 +115,42 @@ void Symulation::usunPlanety()
     planety.clear();
 }
 
-void Symulation::start()
-{
-    watek->start();
-}
+//void Symulation::start()
+//{
+//    watek->start();
+//}
 
 bool Symulation::czyzakonczony()
 {
     return czakonczony;
 }
 
-void Symulation::doWork()
+void Symulation::run()
 {
+    gracz->czasZycia=0;
     QTime zegar;
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
-    gracz->czasZycia=0;
-    while (couter < 1000000) {
+    gracz->czasZycia = 0;
+    while (1) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
-        if (interaktywne)
-            watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-        ++couter;
+        //if (interaktywne)
+            //watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+       // ++couter;
     }
 
     this->czakonczony = true;
-    qDebug() << "zakonczono :: czasZycia == " << gracz->czasZycia;
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
     }
 }
 
-void Symulation::zakonczony()
-{
-    czakonczony = true;
-}
+//void Symulation::zakonczony()
+//{
+//    czakonczony = true;
+//}
