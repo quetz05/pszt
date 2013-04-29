@@ -12,10 +12,10 @@ using namespace std;
 
 Symulation::Symulation(int id)
 {
-    watek = new QThread();
-    connect(watek, SIGNAL(started()), this, SLOT(doWork()));
-    connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
-    moveToThread(watek);
+    //watek = new QThread();
+    //connect(watek, SIGNAL(started()), this, SLOT(doWork()));
+    //connect(watek, SIGNAL(finished()), this, SLOT(zakonczony()));
+    //moveToThread(watek);
     czakonczony = false;
     interaktywne = false;
     ident = id;
@@ -115,17 +115,17 @@ void Symulation::usunPlanety()
     planety.clear();
 }
 
-void Symulation::start()
-{
-    watek->start();
-}
+//void Symulation::start()
+//{
+//    watek->start();
+//}
 
 bool Symulation::czyzakonczony()
 {
     return czakonczony;
 }
 
-void Symulation::doWork()
+void Symulation::run()
 {
     gracz->czasZycia=0;
     QTime zegar;
@@ -133,14 +133,14 @@ void Symulation::doWork()
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
     gracz->czasZycia = 0;
-    while (couter < 10000) {
+    while (1) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
-        if (interaktywne)
-            watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-        ++couter;
+        //if (interaktywne)
+            //watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+       // ++couter;
     }
 
     this->czakonczony = true;
@@ -150,7 +150,7 @@ void Symulation::doWork()
     }
 }
 
-void Symulation::zakonczony()
-{
-    czakonczony = true;
-}
+//void Symulation::zakonczony()
+//{
+//    czakonczony = true;
+//}

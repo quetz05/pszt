@@ -5,8 +5,7 @@
 #include <random>
 #include "symulation.h"
 #include <QObject>
-
-
+#include "wiadomosc.h"
 
 #define N 10 /*liczba osobników w populacji*/
 #define ARG 4 /*liczba argumentów jednego osobnika*/
@@ -26,15 +25,13 @@ public:
     //początkowi osobnicy populacji
     vector <Kometa*> osobniki;
     //rozklady osobników
-    vector <vector<double>> rozklady;
+    vector <vectorDouble> rozklady;
 
     //potomki populacji  do oceny
     vector <Kometa*> potomki;
 
     void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
 
-    //tworzy nowa populacje
-    void tworzNowaPopulacje();
     /**
      * @brief oceniaj funkcja oceniajaca potomkow
      */
@@ -42,10 +39,20 @@ public:
 
     void dawaj() { emit gotowe(); }
 
+public slots:
+    //tworzy nowa populacje
+    void tworzNowaPopulacje();
+
+    void dzialaj();
+
 signals:
     void gotowe();
+    void nadajWiadomosc(ProstaWiadomosc wiad);
 
 private:
+
+    QThread *watek;
+    QMutex *mux;
 
     //czas ktory uznajemy za nieskonczonosc
     int czasDocelowy;
@@ -55,7 +62,7 @@ private:
     //zardoki
     vector <Kometa*> zarodki;
     //rozkłady zarodków
-    vector <vector<double>> rozkladyZarodkow;
+    vector <vectorDouble> rozkladyZarodkow;
 
 
     //losuje sekwencje rodziców do rozmnażania - (N+1) osobników

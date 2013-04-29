@@ -10,22 +10,22 @@
 
 #define FRAME_TIME 33.3333
 
-class Symulation : public QObject
+class Symulation : public QObject, public QRunnable
 {
     Q_OBJECT
 
 private:
     std::vector <Planeta*> planety;
     Kometa *gracz;
-    QThread *watek;
+    //QThread *watek;
     bool interaktywne;
     int ident;
     bool czakonczony;
 public:
     Symulation(int id);
     ~Symulation() {
-        watek->terminate();
-        delete watek; }
+        /*watek->terminate();
+        delete watek;*/ }
     Vector2 dvGrav(Planeta *p, Kometa *k, double dt);
     bool HitTest(Planeta *p ,Kometa *k);
     bool krokSymulacji(double dt, Kometa *k);
@@ -40,9 +40,9 @@ signals:
     void powiadom(Kometa *naCzym, Wiadomosc wiad);
 
 public slots:
-    void start();
-    void doWork();
-    void zakonczony();
+    //void start();
+    void run();
+    //void zakonczony();
 };
 
 #endif // SYMULATION_H

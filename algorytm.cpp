@@ -5,14 +5,21 @@
 #include <iostream>
 #include <QDebug>
 #include <algorithm>
-
-
+#include <QThreadPool>
 
 static double tau = 1 / (qSqrt(2 * qSqrt(N)));
 static double tau2 = 1 / (qSqrt(2 * N));
 
 Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(0,1)
 {
+
+    watek = new QThread();
+    connect(watek, SIGNAL(started()), this, SLOT(tworzNowaPopulacje()));
+    moveToThread(watek);
+
+    mux = new QMutex();
+    mux->lock();
+
     this->plansza = p;
     for(int i = 0; i < N; i++)
     {
@@ -27,6 +34,8 @@ Populacja::Populacja(std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(
     }
 
     oceniaj(&osobniki);
+
+    watek->start();
 }
 
 Populacja::Populacja(vector <Kometa*> nowaPopulacja)
@@ -106,43 +115,86 @@ void Populacja::tworzNowychOsobnikow()
     }
 }
 
-
 void Populacja::tworzNowaPopulacje()
 {
 
-    this->tworzSekwencje();
-    this->krzyzowanie();
-    this->mutacja();
-    this->tworzNowychOsobnikow();
+    while (1) {
+        qDebug() << "tworzNowaPopulacje :: attempting lock";
+        mux->lock();
+        qDebug() << "tworzNowaPopulacje :: lock acquired";
 
-    oceniaj(&potomki);
+        qDebug() << "=============================";
+        qDebug() << "licznosci wektorow PRZED ::";
+        qDebug() << "potomki == " << potomki.size();
+        qDebug() << "osobniki == " << osobniki.size();
+        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
+        qDebug() << "zarodki == " << zarodki.size();
+        qDebug() << "rozklady == " << rozkladyZarodkow.size();
+        qDebug() << "=============================";
 
-    QList <Kometa*> temp;
+        potomki.clear();
+        sekwencjaRodzicow.clear();
+        zarodki.clear();
+        rozkladyZarodkow.clear();
 
-    for(unsigned int j=0; j<osobniki.size(); j++)
-        temp.push_back(osobniki[j]);
+        emit nadajWiadomosc(ProstaWiadomosc(sekwencja));
+        this->tworzSekwencje();
+        emit nadajWiadomosc(ProstaWiadomosc(krzyzuj));
+        this->krzyzowanie();
+        emit nadajWiadomosc(ProstaWiadomosc(mutuj));
+        this->mutacja();
+        emit nadajWiadomosc(ProstaWiadomosc(tworz));
+        this->tworzNowychOsobnikow();
+        emit nadajWiadomosc(ProstaWiadomosc(ocena));
 
-    for(unsigned int i=0; i<potomki.size();i++)
-        temp.push_back(potomki[i]);
+        qDebug() << "=============================";
+        qDebug() << "licznosci wektorow PO ::";
+        qDebug() << "potomki == " << potomki.size();
+        qDebug() << "osobniki == " << osobniki.size();
+        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
+        qDebug() << "zarodki == " << zarodki.size();
+        qDebug() << "rozklady == " << rozkladyZarodkow.size();
+        qDebug() << "=============================";
 
 
-    for( int a=0; a<temp.size() - 1; a++)
-        for( int b=0; b<temp.size() - 1; b++)
-            if(temp[b]->czasZycia < temp[b+1]->czasZycia)
-            {
-                Kometa *t;
-                t = temp[b];
-                temp[b] = temp[b+1];
-                temp[b+1] = t;
-            }
+        oceniaj(&potomki);
 
-    osobniki.clear();
+        QList <Kometa*> temp;
 
-    for(unsigned int k=0; k<N; k++)
-        osobniki.push_back(temp[k]);
+        for(unsigned int j=0; j<osobniki.size(); j++)
+            temp.push_back(osobniki[j]);
 
-    emit gotowe();
+        for(unsigned int i=0; i<potomki.size();i++)
+            temp.push_back(potomki[i]);
 
+
+        for( int a=0; a<temp.size() - 1; a++)
+            for( int b=0; b<temp.size() - 1; b++)
+                if(temp[b]->czasZycia < temp[b+1]->czasZycia)
+                {
+                    Kometa *t;
+                    t = temp[b];
+                    temp[b] = temp[b+1];
+                    temp[b+1] = t;
+                }
+
+        osobniki.clear();
+
+        for(unsigned int k=0; k<N; k++)
+            osobniki.push_back(temp[k]);
+
+        emit nadajWiadomosc(ProstaWiadomosc(zakonczyl));
+        emit gotowe();
+
+        //mux->unlock();
+    }
+}
+
+void Populacja::dzialaj()
+{
+    qDebug() << "dzialaj --> releasing lock";
+    mux->unlock();
+    qDebug() << "dzialaj --> lock released";
 }
 
 /**
@@ -161,9 +213,11 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
     }
 
+    qDebug() << "rozmiar vectora planet == " << k->size();
     for (unsigned int i = 0; i <k->size(); ++i) {
-        sim[i]->start();
+        QThreadPool::globalInstance()->start(sim[i]);
     }
+
     for (unsigned int i = 0; i <k->size(); ++i) {
         while(!sim[i]->czyzakonczony())
             this->thread()->msleep(100);
@@ -172,9 +226,9 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     /*
      *usuwanie symulacji
      */
-    for (unsigned int i = 0; i <k->size(); ++i) {
-        delete sim[i];
-    }
+    //for (unsigned int i = 0; i <k->size(); ++i) {
+    //    delete sim[i];
+    //}
     delete [] sim;
 }
 

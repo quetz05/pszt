@@ -7,22 +7,32 @@
 #include <time.h>
 #include "kometascene.h"
 #include "QPushButton"
+#include <QPlainTextEdit>
+#include <QDialogButtonBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    ilePlanet = minWaga = maksWaga = 1;
+    ilePlanet = 1;
+    minWaga = maksWaga = 10;
     counter = 0;
     pierwsza = true;
+    pop = NULL;
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         gracz[i] = NULL;
         sim[i] = NULL;
     }
 
+
+    QThreadPool::globalInstance()->setMaxThreadCount(30);
+    qDebug() << "idealna ilosc watkow == " << QThread::idealThreadCount();
+    qDebug() << "faktyczna ilosc watkow == " << QThreadPool::globalInstance()->maxThreadCount();
+
     qRegisterMetaType<Wiadomosc>("Wiadomosc");
+    qRegisterMetaType<ProstaWiadomosc>("ProstaWiadomosc");
 
     connect(ui->liczbaPlanet, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbePlanet(int)));
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
@@ -32,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->rysownik, SIGNAL(graczPuscil()), this, SLOT(startSim()));
     connect(ui->guzikSymuluj, SIGNAL(clicked()), this, SLOT(symuluj()));
     connect(ui->guzikNastepna, SIGNAL(clicked()), this, SLOT(nastepna()));
+    connect(ui->guzikTabela, SIGNAL(clicked()), this, SLOT(tabela()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -85,8 +96,9 @@ void MainWindow::generujPlansze()
         return;
     }
 
-    ui->guzikGraj->setEnabled(true);
     ui->guzikSymuluj->setEnabled(true);
+    ui->guzikNastepna->setEnabled(false);
+    ui->guzikTabela->setEnabled(false);
 
     scena->clear();
     scena->update(0, 0, 800, 600);
@@ -139,17 +151,45 @@ void MainWindow::graj()
 
 void MainWindow::symuluj()
 {
+    if (pop)
+        delete pop;
+
     pop = new Populacja(&planety);
     connect(pop, SIGNAL(gotowe()), this, SLOT(narysuj()));
+    connect(this, SIGNAL(next()), pop, SLOT(dzialaj()));
+    connect(pop, SIGNAL(nadajWiadomosc(ProstaWiadomosc)), this, SLOT(odbierzProsta(ProstaWiadomosc)));
 
     narysuj();
 
     ui->guzikNastepna->setEnabled(true);
+    ui->guzikTabela->setEnabled(true);
 }
 
 void MainWindow::nastepna()
 {
-    pop->tworzNowaPopulacje();
+
+    pop->dzialaj();
+    ui->guzikNastepna->setEnabled(false);
+    ui->guzikGeneruj->setEnabled(false);
+    ui->guzikSymuluj->setEnabled(false);
+}
+
+void MainWindow::tabela()
+{
+    QDialog *dlgMultiLine =    new QDialog(this);
+
+    //local variable
+        QGridLayout *gridLayout = new QGridLayout(dlgMultiLine);
+
+        QLabel *komety[10];
+
+        for (int i = 0; i < 10; ++i) {
+            komety[i] = new QLabel();
+            komety[i]->setText(pop->osobniki[i]->toString());
+            gridLayout->addWidget(komety[i], i, 0, 1, 1);
+        }
+
+        dlgMultiLine->show();
 }
 
 void MainWindow::narysuj()
@@ -174,6 +214,9 @@ void MainWindow::narysuj()
 
     scena->update(0, 0, 800, 600);
 
+    ui->guzikNastepna->setEnabled(true);
+    ui->guzikGeneruj->setEnabled(true);
+    ui->guzikSymuluj->setEnabled(true);
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
@@ -196,7 +239,36 @@ void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 
 }
 
+void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
+{
+    switch (wiad.typ) {
+        //sekwencja, krzyzuj, mutuj, tworz, oceniaj
+    case sekwencja : ui->labelPostep->setText("Generowanie sekwencji rodziców...");
+        break;
+
+    case krzyzuj : ui->labelPostep->setText("Krzyżowanie rodziców...");
+        ui->postep->setValue(20);
+        break;
+
+    case mutuj : ui->labelPostep->setText("Mutowanie współczynników...");
+        ui->postep->setValue(40);
+        break;
+
+    case tworz : ui->labelPostep->setText("Tworzenie potomków...");
+        ui->postep->setValue(60);
+        break;
+
+    case ocena : ui->labelPostep->setText("Ocenianie potomków...");
+        ui->postep->setValue(80);
+        break;
+
+    case zakonczyl : ui->labelPostep->setText("Zakończono generowanie nowej populacji.");
+        ui->postep->setValue(100);
+        break;
+    }
+}
+
 void MainWindow::startSim() {
     sim[0]->dodajGracza(gracz[0]);
-    sim[0]->start();
+    //sim[0]->start();
 }
