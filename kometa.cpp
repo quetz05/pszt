@@ -61,11 +61,10 @@ void Kometa::dodajOstatni()
     sciezka->lineTo(srodek.x, srodek.y);
 }
 
-QString Kometa::toString()
-{
-    return QString("Pozycja początkowa : ") % QString::number(pozPocz.x) %
-            QString(" x ") % QString::number(pozPocz.y) %
-            QString("<br>Prędkość początkowa : ") % QString::number(kierPocz.x) %
-            QString(" x ") % QString::number(kierPocz.y) %
-            QString("<br>Czas życia = ") % QString::number(czasZycia);
+QString Kometa::pozycjaString() {
+    return QString("x = ") % QString::number(pozPocz.x) % QString("<br>y = ") % QString::number(pozPocz.y);
+}
+
+QString Kometa::kierunekString() {
+    return QString("x = ") % QString::number(kierPocz.x) % QString("<br>y = ") % QString::number(kierPocz.y);
 }

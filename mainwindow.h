@@ -22,6 +22,7 @@ public slots:
     void ustawLiczbePlanet(int wartosc);
     void ustawMinWage(int wartosc);
     void ustawMaksWage(int wartosc);
+    void ustawLiczbeObrotow(int wartosc);
 
     void generujPlansze();
     void graj();
@@ -48,7 +49,7 @@ private:
 
     std::vector <Planeta*> planety;
 
-    int ilePlanet, minWaga, maksWaga;
+    int ilePlanet, minWaga, maksWaga, ileObrotow, ileWykonal;
     QGraphicsScene *scena;
 
     Symulation *sim[NUM_THREADS];

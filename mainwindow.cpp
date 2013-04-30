@@ -9,13 +9,15 @@
 #include "QPushButton"
 #include <QPlainTextEdit>
 #include <QDialogButtonBox>
+#include "zestawienie.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    ilePlanet = 1;
+    ileWykonal = 0;
+    ilePlanet = ileObrotow = 1;
     minWaga = maksWaga = 10;
     counter = 0;
     pierwsza = true;
@@ -37,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->liczbaPlanet, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbePlanet(int)));
     connect(ui->minWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMinWage(int)));
     connect(ui->maksWaga, SIGNAL(sliderMoved(int)), this, SLOT(ustawMaksWage(int)));
+    connect(ui->liczbaObroto, SIGNAL(sliderMoved(int)), this, SLOT(ustawLiczbeObrotow(int)));
     connect(ui->guzikGeneruj, SIGNAL(clicked()), this, SLOT(generujPlansze()));
     connect(ui->guzikGraj, SIGNAL(clicked()), this, SLOT(graj()));
     connect(ui->rysownik, SIGNAL(graczPuscil()), this, SLOT(startSim()));
@@ -82,6 +85,12 @@ void MainWindow::ustawMinWage(int wartosc) {
 void MainWindow::ustawMaksWage(int wartosc) {
     maksWaga = wartosc;
     ui->labelMaksWaga->setText(QString::number(wartosc).append(" x 10 <sup>24</sup> kg"));
+}
+
+void MainWindow::ustawLiczbeObrotow(int wartosc)
+{
+    ileObrotow = wartosc;
+    ui->labelObrotow->setText(QString::number(wartosc));
 }
 
 void MainWindow::generujPlansze()
@@ -167,35 +176,26 @@ void MainWindow::symuluj()
 
 void MainWindow::nastepna()
 {
+    qDebug() << "rozpoczynam obrot == " << ileWykonal;
 
     pop->dzialaj();
+
     ui->guzikNastepna->setEnabled(false);
     ui->guzikGeneruj->setEnabled(false);
     ui->guzikSymuluj->setEnabled(false);
+    ui->guzikTabela->setEnabled(false);
 }
 
 void MainWindow::tabela()
 {
-    QDialog *dlgMultiLine =    new QDialog(this);
 
-    //local variable
-        QGridLayout *gridLayout = new QGridLayout(dlgMultiLine);
-
-        QLabel *komety[10];
-
-        for (int i = 0; i < 10; ++i) {
-            komety[i] = new QLabel();
-            komety[i]->setText(pop->osobniki[i]->toString());
-            gridLayout->addWidget(komety[i], i, 0, 1, 1);
-        }
-
-        dlgMultiLine->show();
+    Zestawienie *zest = new Zestawienie(this);
+    zest->prepareData(pop);
+    zest->show();
 }
 
 void MainWindow::narysuj()
 {
-
-    qDebug() << "narysuj()";
 
     QList<QGraphicsItem*> lista = scena->items();
 
@@ -213,10 +213,6 @@ void MainWindow::narysuj()
     }
 
     scena->update(0, 0, 800, 600);
-
-    ui->guzikNastepna->setEnabled(true);
-    ui->guzikGeneruj->setEnabled(true);
-    ui->guzikSymuluj->setEnabled(true);
 }
 
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
@@ -242,29 +238,22 @@ void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
 {
     switch (wiad.typ) {
-        //sekwencja, krzyzuj, mutuj, tworz, oceniaj
-    case sekwencja : ui->labelPostep->setText("Generowanie sekwencji rodziców...");
-        break;
 
-    case krzyzuj : ui->labelPostep->setText("Krzyżowanie rodziców...");
-        ui->postep->setValue(20);
-        break;
-
-    case mutuj : ui->labelPostep->setText("Mutowanie współczynników...");
-        ui->postep->setValue(40);
-        break;
-
-    case tworz : ui->labelPostep->setText("Tworzenie potomków...");
-        ui->postep->setValue(60);
-        break;
-
-    case ocena : ui->labelPostep->setText("Ocenianie potomków...");
-        ui->postep->setValue(80);
-        break;
-
-    case zakonczyl : ui->labelPostep->setText("Zakończono generowanie nowej populacji.");
-        ui->postep->setValue(100);
-        break;
+    case zakonczyl : {
+            ++ileWykonal;
+            ui->labelPostep->setText("Generowanie populacji -- (" + QString::number(ileWykonal) + " / " + QString::number(ileObrotow) + ")");
+            ui->postep->setValue((int)(100 * (float)ileWykonal/(float)ileObrotow));
+            if (ileWykonal < ileObrotow)
+                nastepna();
+            else {
+                ileWykonal = 0;
+                ui->labelPostep->setText("Zakończono generowanie populacji.");
+                ui->guzikNastepna->setEnabled(true);
+                ui->guzikGeneruj->setEnabled(true);
+                ui->guzikSymuluj->setEnabled(true);
+                ui->guzikTabela->setEnabled(true);
+            }
+        } break;
     }
 }
 

@@ -18,6 +18,7 @@ public:
 
     Vector2 zwrocKierunek(){ return kierunek; }
     Vector2 zwrocPozycje(){ return pozPocz; }
+    QColor zwrocKolor() {return kolor; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
@@ -25,7 +26,8 @@ public:
     void ustawKolor(QColor k) { kolor = k; }
     void dodajOstatni();
 
-    QString toString();
+    QString pozycjaString();
+    QString kierunekString();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
