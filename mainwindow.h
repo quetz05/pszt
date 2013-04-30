@@ -7,6 +7,8 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 #include "algorytm.h"
+#include "zestawienie.h"
+#include "replay.h"
 
 #define NUM_THREADS 50
 
@@ -30,6 +32,8 @@ public slots:
     void nastepna();
     void tabela();
 
+    void narysujSymulacje();
+
     void narysuj();
 
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
@@ -52,8 +56,13 @@ private:
     int ilePlanet, minWaga, maksWaga, ileObrotow, ileWykonal;
     QGraphicsScene *scena;
 
-    Symulation *sim[NUM_THREADS];
-    Kometa *gracz[NUM_THREADS];
+    Symulation *sim;
+    Kometa *gracz;
+
+    //Symulation *sim[NUM_THREADS];
+    //Kometa *gracz[NUM_THREADS];
+
+    Zestawienie *zest;
 
     Populacja *pop;
 

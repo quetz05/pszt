@@ -132,14 +132,13 @@ void Symulation::run()
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
-    gracz->czasZycia = 0;
     while (1) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
-        //if (interaktywne)
-            //watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+        if (interaktywne)
+            this->thread()->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
        // ++couter;
     }
 

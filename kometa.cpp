@@ -42,12 +42,14 @@ void Kometa::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 void Kometa::ustawPozycje(Vector2 p) {
 
     srodek = p;
-    if (!interaktywne) {
+    if (!interaktywne || rysujSciezke) {
         ++counter;
 
         if (!(counter % 5))
             sciezka->lineTo(p.x, p.y);
-    } else
+    }
+
+    if (interaktywne)
         this->setRect(boundingRect());
 }
 

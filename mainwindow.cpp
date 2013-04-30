@@ -23,11 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     pierwsza = true;
     pop = NULL;
 
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        gracz[i] = NULL;
-        sim[i] = NULL;
-    }
-
+    sim = NULL;
+    gracz = NULL;
 
     QThreadPool::globalInstance()->setMaxThreadCount(30);
     qDebug() << "idealna ilosc watkow == " << QThread::idealThreadCount();
@@ -61,10 +58,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rysownik->setScene(scena);
     ui->rysownik->setMouseTracking(true);
     scena->setBackgroundBrush((QBrush(QColor::fromRgb(0, 0, 0), Qt::SolidPattern)));
-
-    sim[0] = new Symulation(0);
-    connect(sim[0], SIGNAL(powiadom(Kometa*,Wiadomosc)),
-            this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)), Qt::BlockingQueuedConnection);
 }
 
 MainWindow::~MainWindow()
@@ -123,7 +116,6 @@ void MainWindow::generujPlansze()
     qreal x, y;
     srand(time(NULL));
 
-    sim[0]->usunPlanety();
     planety.clear();
     for (int i = 0; i < ilePlanet; ++i) {
 
@@ -138,24 +130,13 @@ void MainWindow::generujPlansze()
         } while (scena->collidingItems(kolo).count());
 
         scena->addItem(kolo);
-        sim[0]->dodajPlanete(kolo);
         planety.push_back(kolo);
     }
 }
 
 void MainWindow::graj()
 {
-    ui->guzikSymuluj->setEnabled(false);
 
-    if (gracz[0]) {
-        scena->removeItem(gracz[0]);
-        delete gracz[0];
-    }
-
-    gracz[0] = new Kometa(Vector2(-100, -100), Vector2(0, 0));
-    scena->addItem(gracz[0]);
-    ui->rysownik->przypiszGracz(gracz[0]);
-    ui->rysownik->ustawTrybGry(true);
 }
 
 void MainWindow::symuluj()
@@ -176,8 +157,6 @@ void MainWindow::symuluj()
 
 void MainWindow::nastepna()
 {
-    qDebug() << "rozpoczynam obrot == " << ileWykonal;
-
     pop->dzialaj();
 
     ui->guzikNastepna->setEnabled(false);
@@ -189,9 +168,54 @@ void MainWindow::nastepna()
 void MainWindow::tabela()
 {
 
-    Zestawienie *zest = new Zestawienie(this);
+    zest = new Zestawienie(this);
     zest->prepareData(pop);
     zest->show();
+}
+
+void MainWindow::narysujSymulacje()
+{
+    int id = QObject::sender()->objectName().toInt();
+    qDebug() << "symulowanie " << id << " komety z wektorka";
+
+    zest->close();
+
+    QList<QGraphicsItem*> lista = scena->items();
+
+    for (int i = 0; i < lista.size(); ++i) {
+        Kometa *temp = dynamic_cast<Kometa*>(lista[i]);
+        //if (temp)
+          //  scena->removeItem(temp);
+    }
+
+    gracz = new Kometa(pop->osobniki[id]->zwrocPozycjePocz(), pop->osobniki[id]->zwrocKierunekPocz());
+    gracz->ustawInteraktywne(true);
+    gracz->narysujSciezke();
+    gracz->ustawKolor(pop->osobniki[id]->zwrocKolor());
+
+    qDebug() << gracz->zwrocPozycjePocz().x << " / " << gracz->zwrocPozycjePocz().y
+             << " :: " << gracz->zwrocKierunekPocz().x << " / " << gracz->zwrocKierunekPocz().y;
+
+    /*if (sim)
+        delete sim;
+
+    sim = new Symulation(0);
+    sim->ustawInteraktywne(true);
+    sim->dodajGracza(gracz);
+
+    for (int i = 0; i < ilePlanet; ++i)
+        sim->dodajPlanete(planety[i]);
+
+    scena->addItem(gracz);
+
+    connect(sim, SIGNAL(powiadom(Kometa*,Wiadomosc)), this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));*/
+
+    Replay *rp = new Replay(gracz, pop->osobniki[id]->zwrocSciezke());
+    connect(rp, SIGNAL(nadajWiadomosc(Kometa*,Wiadomosc)), this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
+
+    scena->addItem(gracz);
+
+    QThreadPool::globalInstance()->start(rp);
 }
 
 void MainWindow::narysuj()
@@ -219,20 +243,11 @@ void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
         case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
+        scena->update(0, 0, 800, 600);
                     break;
-        case zakonczyl : ++counter;
+        case zakonczyl : scena->update(0, 0, 800, 600);
                     break;
     }
-
-    if (counter == NUM_THREADS) {
-        for (int i = 0; i < NUM_THREADS; ++i) {
-            gracz[i]->narysujSciezke();
-
-        }
-        scena->update(0, 0, 800, 600);
-        scena->update(0, 0, 800, 600);
-    }
-
 }
 
 void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
@@ -258,6 +273,4 @@ void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
 }
 
 void MainWindow::startSim() {
-    sim[0]->dodajGracza(gracz[0]);
-    //sim[0]->start();
 }

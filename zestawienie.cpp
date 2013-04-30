@@ -1,6 +1,7 @@
 #include "zestawienie.h"
 #include "ui_zestawienie.h"
 #include <QGraphicsEllipseItem>
+#include <QPushButton>
 
 Zestawienie::Zestawienie(QWidget *parent) :
     QDialog(parent),
@@ -50,6 +51,16 @@ void Zestawienie::prepareData(Populacja *pop) {
         kometa = new QGraphicsEllipseItem(40 + (i*90), 8, 10, 10);
         kometa->setBrush(QBrush(kolor));
         scena->addItem(kometa);
+    }
+
+    QPushButton *guzik;
+
+    for (int i = 0; i < 10; ++i) {
+        guzik = new QPushButton("Odtwórz");
+        guzik->setObjectName(QString::number(i));
+        connect(guzik, SIGNAL(clicked()), parentWidget(), SLOT(narysujSymulacje()));
+
+        tabelka->addWidget(guzik, 3, i + 1, 1, 1);
     }
 }
 

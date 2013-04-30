@@ -17,8 +17,10 @@ public:
 
 
     Vector2 zwrocKierunek(){ return kierunek; }
-    Vector2 zwrocPozycje(){ return pozPocz; }
+    Vector2 zwrocPozycjePocz(){ return pozPocz; }
+    Vector2 zwrocKierunekPocz() { return kierPocz; }
     QColor zwrocKolor() {return kolor; }
+    QPainterPath* zwrocSciezke() { return sciezka; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
