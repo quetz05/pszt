@@ -119,6 +119,16 @@ void Populacja::tworzNowychOsobnikow()
         kier.x = zarodki[i]->zwrocKierunek().x + rozkladNorm(generator)*rozkladyZarodkow[i][2];
         kier.y = zarodki[i]->zwrocKierunek().y + rozkladNorm(generator)*rozkladyZarodkow[i][3];
 
+        if(sr.x>790)
+            sr.x = 790;
+        else if (sr.x<10)
+            sr.x=10;
+
+        if(sr.y>590)
+            sr.y = 590;
+        else if (sr.y<10)
+            sr.y=10;
+
         potomki.push_back(new Kometa(sr, kier));
 
         for(unsigned int j=0; j<ARG; j++)
