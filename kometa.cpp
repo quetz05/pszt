@@ -15,6 +15,7 @@ Kometa::Kometa(Vector2 sr, Vector2 k)
     sciezka->moveTo(sr.x, sr.y);
     interaktywne = false;
     rysujSciezke = false;
+    delMode = false;
     czasZycia = 0;
     counter = 0;
     kolor = QColor::fromRgb(rand() % 255, rand() % 255, rand() % 255);
@@ -42,14 +43,30 @@ void Kometa::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 void Kometa::ustawPozycje(Vector2 p) {
 
     srodek = p;
-    if (!interaktywne) {
+    if (!interaktywne || rysujSciezke) {
         ++counter;
 
-        if (!(counter % 5))
+        if (!(counter % 5) || interaktywne) {
             sciezka->lineTo(p.x, p.y);
-    } else
-        this->setRect(boundingRect());
+            setRect(sciezka->boundingRect());
+        }
+    }
+
+    if (interaktywne)
+        this->setRect(srodek.x - promien, srodek.y - promien, 2*promien, 2*promien);
+
 }
+
+QRectF Kometa::boundingRect() const
+{
+    return QGraphicsEllipseItem::boundingRect();
+
+    if (delMode)
+        return sciezka->boundingRect();
+    else
+        return QRectF(srodek.x - promien, srodek.y - promien, promien * 2, promien * 2);
+}
+
 
 void Kometa::narysujSciezke()
 {
@@ -59,13 +76,13 @@ void Kometa::narysujSciezke()
 void Kometa::dodajOstatni()
 {
     sciezka->lineTo(srodek.x, srodek.y);
+    this->setRect(sciezka->boundingRect());
 }
 
-QString Kometa::toString()
-{
-    return QString("Pozycja początkowa : ") % QString::number(pozPocz.x) %
-            QString(" x ") % QString::number(pozPocz.y) %
-            QString("<br>Prędkość początkowa : ") % QString::number(kierPocz.x) %
-            QString(" x ") % QString::number(kierPocz.y) %
-            QString("<br>Czas życia = ") % QString::number(czasZycia);
+QString Kometa::pozycjaString() {
+    return QString("x = ") % QString::number(pozPocz.x) % QString("<br>y = ") % QString::number(pozPocz.y);
+}
+
+QString Kometa::kierunekString() {
+    return QString("x = ") % QString::number(kierPocz.x) % QString("<br>y = ") % QString::number(kierPocz.y);
 }

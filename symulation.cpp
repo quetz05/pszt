@@ -7,6 +7,8 @@
 
 #define G 6.67384
 
+long int Symulation::maxCzas = 30;
+
 using namespace std;
 
 
@@ -132,15 +134,14 @@ void Symulation::run()
     zegar.start();
     int last_time = zegar.elapsed(), current_time = 0;
     long int couter =0;
-    gracz->czasZycia = 0;
-    while (1) {
+    while (couter < maxCzas) {
         last_time = zegar.elapsed();
         if (!krokSymulacji(1, gracz))
             break;
         current_time = zegar.elapsed();
-        //if (interaktywne)
-            //watek->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
-       // ++couter;
+        if (interaktywne)
+            this->thread()->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
+        ++couter;
     }
 
     this->czakonczony = true;

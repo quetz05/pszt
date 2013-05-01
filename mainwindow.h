@@ -7,8 +7,10 @@
 #include "symulation.h"
 #include "wiadomosc.h"
 #include "algorytm.h"
+#include "zestawienie.h"
+#include "replay.h"
 
-#define NUM_THREADS 50
+#define MAX_TIME 5000
 
 namespace Ui {
     class MainWindow;
@@ -22,6 +24,8 @@ public slots:
     void ustawLiczbePlanet(int wartosc);
     void ustawMinWage(int wartosc);
     void ustawMaksWage(int wartosc);
+    void ustawLiczbeObrotow(int wartosc);
+    void ustawCzas();
 
     void generujPlansze();
     void graj();
@@ -29,11 +33,14 @@ public slots:
     void nastepna();
     void tabela();
 
+    void narysujSymulacje();
+
     void narysuj();
 
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
     void odbierzProsta(ProstaWiadomosc wiad);
     void startSim();
+    void ustawGuziki(bool enable);
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -48,11 +55,16 @@ private:
 
     std::vector <Planeta*> planety;
 
-    int ilePlanet, minWaga, maksWaga;
+    int ilePlanet, minWaga, maksWaga, ileObrotow, ileWykonal;
     QGraphicsScene *scena;
 
-    Symulation *sim[NUM_THREADS];
-    Kometa *gracz[NUM_THREADS];
+    Symulation *sim;
+    Kometa *gracz;
+
+    //Symulation *sim[NUM_THREADS];
+    //Kometa *gracz[NUM_THREADS];
+
+    Zestawienie *zest;
 
     Populacja *pop;
 

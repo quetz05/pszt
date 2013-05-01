@@ -17,17 +17,23 @@ public:
 
 
     Vector2 zwrocKierunek(){ return kierunek; }
-    Vector2 zwrocPozycje(){ return pozPocz; }
+    Vector2 zwrocPozycjePocz(){ return pozPocz; }
+    Vector2 zwrocKierunekPocz() { return kierPocz; }
+    QColor zwrocKolor() {return kolor; }
+    QPainterPath* zwrocSciezke() { return sciezka; }
     void ustawPozycje(Vector2 p);
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
     void ustawInteraktywne(bool enabled) { interaktywne = enabled; }
+    void ustawUsuwanie(bool enabled) { delMode = enabled; }
     void ustawKolor(QColor k) { kolor = k; }
     void dodajOstatni();
 
-    QString toString();
+    QString pozycjaString();
+    QString kierunekString();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
 
     std::vector <double> rozklady;
     double czasZycia;
@@ -41,6 +47,7 @@ private:
     QColor kolor;
     bool interaktywne;
     bool rysujSciezke;
+    bool delMode;
     int counter;
 
 };

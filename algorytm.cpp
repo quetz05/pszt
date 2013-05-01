@@ -45,6 +45,11 @@ void Populacja::generujPierwsza()
     emit gotowe();
 }
 
+/*
+ *Dok końc : wnioski - czy zastosowanie ewo. jest ok, czy problem z doborem parametrów., czy można jakoś dostroić algorytm,
+ *metody selekcji, oceny
+ **/
+
 Populacja::Populacja(vector <Kometa*> nowaPopulacja)
 {
     osobniki = nowaPopulacja;
@@ -135,43 +140,22 @@ void Populacja::tworzNowaPopulacje()
 {
 
     while (1) {
-        qDebug() << "tworzNowaPopulacje :: attempting lock";
         mux->lock();
-        qDebug() << "tworzNowaPopulacje :: lock acquired";
-
-        qDebug() << "=============================";
-        qDebug() << "licznosci wektorow PRZED ::";
-        qDebug() << "potomki == " << potomki.size();
-        qDebug() << "osobniki == " << osobniki.size();
-        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
-        qDebug() << "zarodki == " << zarodki.size();
-        qDebug() << "rozklady == " << rozkladyZarodkow.size();
-        qDebug() << "=============================";
 
         potomki.clear();
         sekwencjaRodzicow.clear();
         zarodki.clear();
         rozkladyZarodkow.clear();
 
-        emit nadajWiadomosc(ProstaWiadomosc(sekwencja));
+        //emit nadajWiadomosc(ProstaWiadomosc(sekwencja));
         this->tworzSekwencje();
-        emit nadajWiadomosc(ProstaWiadomosc(krzyzuj));
+        //emit nadajWiadomosc(ProstaWiadomosc(krzyzuj));
         this->krzyzowanie();
-        emit nadajWiadomosc(ProstaWiadomosc(mutuj));
+        //emit nadajWiadomosc(ProstaWiadomosc(mutuj));
         this->mutacja();
-        emit nadajWiadomosc(ProstaWiadomosc(tworz));
+        //emit nadajWiadomosc(ProstaWiadomosc(tworz));
         this->tworzNowychOsobnikow();
-        emit nadajWiadomosc(ProstaWiadomosc(ocena));
-
-        qDebug() << "=============================";
-        qDebug() << "licznosci wektorow PO ::";
-        qDebug() << "potomki == " << potomki.size();
-        qDebug() << "osobniki == " << osobniki.size();
-        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
-        qDebug() << "zarodki == " << zarodki.size();
-        qDebug() << "rozklady == " << rozkladyZarodkow.size();
-        qDebug() << "=============================";
-
+        //emit nadajWiadomosc(ProstaWiadomosc(ocena));
 
         oceniaj(&potomki);
 
@@ -201,16 +185,12 @@ void Populacja::tworzNowaPopulacje()
 
         emit nadajWiadomosc(ProstaWiadomosc(zakonczyl));
         emit gotowe();
-
-        //mux->unlock();
     }
 }
 
 void Populacja::dzialaj()
 {
-    qDebug() << "dzialaj --> releasing lock";
     mux->unlock();
-    qDebug() << "dzialaj --> lock released";
 }
 
 /**
@@ -229,7 +209,6 @@ void Populacja::oceniaj(vector<Kometa *> *k)
 
     }
 
-    qDebug() << "rozmiar vectora planet == " << k->size();
     for (unsigned int i = 0; i <k->size(); ++i) {
         QThreadPool::globalInstance()->start(sim[i]);
     }
