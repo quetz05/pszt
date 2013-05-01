@@ -10,7 +10,7 @@
 #include "zestawienie.h"
 #include "replay.h"
 
-#define NUM_THREADS 50
+#define MAX_TIME 5000
 
 namespace Ui {
     class MainWindow;
@@ -25,6 +25,7 @@ public slots:
     void ustawMinWage(int wartosc);
     void ustawMaksWage(int wartosc);
     void ustawLiczbeObrotow(int wartosc);
+    void ustawCzas();
 
     void generujPlansze();
     void graj();
@@ -39,6 +40,7 @@ public slots:
     void odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad);
     void odbierzProsta(ProstaWiadomosc wiad);
     void startSim();
+    void ustawGuziki(bool enable);
 
 public:
     MainWindow(QWidget *parent = 0);

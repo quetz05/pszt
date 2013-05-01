@@ -20,4 +20,6 @@ void Replay::run()
 
         this->thread()->msleep(qMax(FRAME_TIME - (current_time - last_time), 0.0));
     }
+
+    emit nadajWiadomosc(gracz, Wiadomosc(0, 0, zakonczyl));
 }

@@ -36,6 +36,8 @@ public:
 
     void ustawInteraktywne(bool enable) { interaktywne = enable; }
 
+    static long int maxCzas;
+
 signals:
     void powiadom(Kometa *naCzym, Wiadomosc wiad);
 

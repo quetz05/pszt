@@ -25,6 +25,7 @@ public:
     void ustawKierunek(Vector2 k){ kierunek = k; }
     void narysujSciezke();
     void ustawInteraktywne(bool enabled) { interaktywne = enabled; }
+    void ustawUsuwanie(bool enabled) { delMode = enabled; }
     void ustawKolor(QColor k) { kolor = k; }
     void dodajOstatni();
 
@@ -32,6 +33,7 @@ public:
     QString kierunekString();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
 
     std::vector <double> rozklady;
     double czasZycia;
@@ -45,6 +47,7 @@ private:
     QColor kolor;
     bool interaktywne;
     bool rysujSciezke;
+    bool delMode;
     int counter;
 
 };

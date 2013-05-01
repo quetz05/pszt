@@ -27,8 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     gracz = NULL;
 
     QThreadPool::globalInstance()->setMaxThreadCount(30);
-    qDebug() << "idealna ilosc watkow == " << QThread::idealThreadCount();
-    qDebug() << "faktyczna ilosc watkow == " << QThreadPool::globalInstance()->maxThreadCount();
 
     qRegisterMetaType<Wiadomosc>("Wiadomosc");
     qRegisterMetaType<ProstaWiadomosc>("ProstaWiadomosc");
@@ -43,11 +41,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->guzikSymuluj, SIGNAL(clicked()), this, SLOT(symuluj()));
     connect(ui->guzikNastepna, SIGNAL(clicked()), this, SLOT(nastepna()));
     connect(ui->guzikTabela, SIGNAL(clicked()), this, SLOT(tabela()));
+    connect(ui->czasPole, SIGNAL(editingFinished()), this, SLOT(ustawCzas()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
 
-    ui->guzikGraj->setEnabled(false);
     ui->guzikSymuluj->setEnabled(false);
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
@@ -84,6 +82,25 @@ void MainWindow::ustawLiczbeObrotow(int wartosc)
 {
     ileObrotow = wartosc;
     ui->labelObrotow->setText(QString::number(wartosc));
+}
+
+void MainWindow::ustawCzas()
+{
+    QIntValidator *valid = new QIntValidator(10, MAX_TIME);
+    QString text = ui->czasPole->text();
+
+    int pos = 0;
+
+    if (valid->validate(text, pos) == QValidator::Acceptable) {
+        Symulation::maxCzas = text.toLong();
+    } else {
+        QMessageBox wiadomosc;
+        wiadomosc.setWindowTitle("Błąd!");
+        wiadomosc.setText("Podj wartość liczbową z zakresu 10 - " + QString::number(MAX_TIME) + " !");
+        wiadomosc.addButton(QMessageBox::Ok);
+        wiadomosc.setIcon(QMessageBox::Warning);
+        wiadomosc.exec();
+    }
 }
 
 void MainWindow::generujPlansze()
@@ -134,11 +151,6 @@ void MainWindow::generujPlansze()
     }
 }
 
-void MainWindow::graj()
-{
-
-}
-
 void MainWindow::symuluj()
 {
     if (pop)
@@ -149,20 +161,19 @@ void MainWindow::symuluj()
     connect(this, SIGNAL(next()), pop, SLOT(dzialaj()));
     connect(pop, SIGNAL(nadajWiadomosc(ProstaWiadomosc)), this, SLOT(odbierzProsta(ProstaWiadomosc)));
 
-    pop->generujPierwsza();
-
     ui->guzikNastepna->setEnabled(true);
     ui->guzikTabela->setEnabled(true);
+
+    pop->generujPierwsza();
+
 }
 
 void MainWindow::nastepna()
 {
+    ui->labelPostep->setText("Generowanie populacji -- (" + QString::number(ileWykonal + 1) + " / " + QString::number(ileObrotow) + ")");
     pop->dzialaj();
 
-    ui->guzikNastepna->setEnabled(false);
-    ui->guzikGeneruj->setEnabled(false);
-    ui->guzikSymuluj->setEnabled(false);
-    ui->guzikTabela->setEnabled(false);
+    ustawGuziki(false);
 }
 
 void MainWindow::tabela()
@@ -175,8 +186,9 @@ void MainWindow::tabela()
 
 void MainWindow::narysujSymulacje()
 {
+    ustawGuziki(false);
+
     int id = QObject::sender()->objectName().toInt();
-    qDebug() << "symulowanie " << id << " komety z wektorka";
 
     zest->close();
 
@@ -184,31 +196,20 @@ void MainWindow::narysujSymulacje()
 
     for (int i = 0; i < lista.size(); ++i) {
         Kometa *temp = dynamic_cast<Kometa*>(lista[i]);
-        //if (temp)
-          //  scena->removeItem(temp);
+        if (temp) {
+            scena->removeItem(temp);
+        }
     }
+
+    scena->update(0, 0, 800, 600);
+
+    if (gracz)
+        delete gracz;
 
     gracz = new Kometa(pop->osobniki[id]->zwrocPozycjePocz(), pop->osobniki[id]->zwrocKierunekPocz());
     gracz->ustawInteraktywne(true);
     gracz->narysujSciezke();
     gracz->ustawKolor(pop->osobniki[id]->zwrocKolor());
-
-    qDebug() << gracz->zwrocPozycjePocz().x << " / " << gracz->zwrocPozycjePocz().y
-             << " :: " << gracz->zwrocKierunekPocz().x << " / " << gracz->zwrocKierunekPocz().y;
-
-    /*if (sim)
-        delete sim;
-
-    sim = new Symulation(0);
-    sim->ustawInteraktywne(true);
-    sim->dodajGracza(gracz);
-
-    for (int i = 0; i < ilePlanet; ++i)
-        sim->dodajPlanete(planety[i]);
-
-    scena->addItem(gracz);
-
-    connect(sim, SIGNAL(powiadom(Kometa*,Wiadomosc)), this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));*/
 
     Replay *rp = new Replay(gracz, pop->osobniki[id]->zwrocSciezke());
     connect(rp, SIGNAL(nadajWiadomosc(Kometa*,Wiadomosc)), this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
@@ -225,9 +226,13 @@ void MainWindow::narysuj()
 
     for (int i = 0; i < lista.size(); ++i) {
         Kometa *temp = dynamic_cast<Kometa*>(lista[i]);
-        if (temp)
+        if (temp) {
+            temp->ustawUsuwanie(true);
             scena->removeItem(temp);
+        }
     }
+
+    scena->update(0, 0, 800, 600);
 
     int ile = pop->osobniki.size();
 
@@ -242,10 +247,13 @@ void MainWindow::narysuj()
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
-        case rusz : naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
+        case rusz :
+        naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
         scena->update(0, 0, 800, 600);
                     break;
-        case zakonczyl : scena->update(0, 0, 800, 600);
+    case zakonczyl :
+        narysuj();
+        ustawGuziki(true);
                     break;
     }
 }
@@ -256,21 +264,61 @@ void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
 
     case zakonczyl : {
             ++ileWykonal;
-            ui->labelPostep->setText("Generowanie populacji -- (" + QString::number(ileWykonal) + " / " + QString::number(ileObrotow) + ")");
+            ui->labelPostep->setText("Generowanie populacji -- (" + QString::number(ileWykonal + 1) + " / " + QString::number(ileObrotow) + ")");
             ui->postep->setValue((int)(100 * (float)ileWykonal/(float)ileObrotow));
             if (ileWykonal < ileObrotow)
                 nastepna();
             else {
                 ileWykonal = 0;
                 ui->labelPostep->setText("Zakończono generowanie populacji.");
-                ui->guzikNastepna->setEnabled(true);
-                ui->guzikGeneruj->setEnabled(true);
-                ui->guzikSymuluj->setEnabled(true);
-                ui->guzikTabela->setEnabled(true);
+                ustawGuziki(true);
             }
         } break;
     }
 }
 
+void MainWindow::graj()
+{
+    QList<QGraphicsItem*> lista = scena->items();
+
+    for (int i = 0; i < lista.size(); ++i) {
+        Kometa *temp = dynamic_cast<Kometa*>(lista[i]);
+        if (temp) {
+            scena->removeItem(temp);
+        }
+    }
+
+    gracz = new Kometa(Vector2(-100, -100), Vector2(0, 0));
+    gracz->ustawInteraktywne(true);
+
+    ui->rysownik->ustawTrybGry(true);
+    ui->rysownik->przypiszGracz(gracz);
+
+    if (sim)
+        delete sim;
+
+    sim = new Symulation(0);
+    sim->ustawInteraktywne(true);
+
+    for (int i = 0; i < planety.size(); ++i)
+        sim->dodajPlanete(planety[i]);
+
+    sim->dodajGracza(gracz);
+    scena->addItem(gracz);
+
+    connect(sim, SIGNAL(powiadom(Kometa*,Wiadomosc)), this, SLOT(odbierzWiadomosc(Kometa*,Wiadomosc)));
+
+}
+
 void MainWindow::startSim() {
+
+    QThreadPool::globalInstance()->start(sim);
+}
+
+void MainWindow::ustawGuziki(bool enable)
+{
+    ui->guzikNastepna->setEnabled(enable);
+    ui->guzikGeneruj->setEnabled(enable);
+    ui->guzikSymuluj->setEnabled(enable);
+    ui->guzikTabela->setEnabled(enable);
 }
