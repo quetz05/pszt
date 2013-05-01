@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include "algorytm.h"
+#include "algorytm2.h"
 #include <iostream>
 #include <ctime>
 
@@ -12,22 +13,34 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
 
+   /* Populacja alg();
+    Populacja2 alg2();
 
-    //Populacja alg();
-
-    /*for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
+    for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
     {
         cout<<alg.osobniki[i]->zwrocPozycje().x<<" ";
         cout<<alg.osobniki[i]->zwrocPozycje().y<<endl;
+
 
         for(int j = 0; j<ARG; j++)
             cout<<alg.osobniki[i]->rozklady[j]<<" ";
         cout<<endl;
     }
 
+    for(unsigned int i = 0; i < alg.osobniki.size(); i++ )
+    {
+        cout<<alg2.osobniki[i]->zwrocPozycje().x<<" ";
+        cout<<alg2.osobniki[i]->zwrocPozycje().y<<endl;
+
+
+        for(int j = 0; j<ARG; j++)
+            cout<<alg2.osobniki[i]->rozklady[j]<<" ";
+        cout<<endl;
+    }
+
     alg.tworzNowaPopulacje();
 
-    cout<<endl;
+    /*cout<<endl;
 
     for(unsigned int i = 0; i < alg.potomki.size(); i++ )
     {

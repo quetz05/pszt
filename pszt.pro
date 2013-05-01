@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     vector.cpp \
     algorytm.cpp \
     kometascene.cpp \
-    zestawienie.cpp
+    zestawienie.cpp \
+    algorytm2.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
     algorytm.h \
     kometascene.h \
     wiadomosc.h \
-    zestawienie.h
+    zestawienie.h \
+    algorytm2.h
 
 FORMS += \
     mainwindow.ui \
