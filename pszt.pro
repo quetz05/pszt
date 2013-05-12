@@ -33,6 +33,7 @@ HEADERS  += mainwindow.h \
     wiadomosc.h \
     zestawienie.h \
     replay.h
+    algorytm2.h
 
 FORMS += \
     mainwindow.ui \
