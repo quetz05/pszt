@@ -45,14 +45,35 @@ void Populacja::generujPierwsza()
     emit gotowe();
 }
 
+void Populacja::ocenPierwsza() {
+
+    oceniaj(&osobniki);
+    emit gotowe();
+}
+
 /*
  *Dok końc : wnioski - czy zastosowanie ewo. jest ok, czy problem z doborem parametrów., czy można jakoś dostroić algorytm,
  *metody selekcji, oceny
  **/
 
-Populacja::Populacja(vector <Kometa*> nowaPopulacja)
+Populacja::Populacja(vector <Kometa*> *nowaPopulacja, std::vector<Planeta *> * p) : generator(rd()), rozkladNorm(0,1)
 {
-    osobniki = nowaPopulacja;
+
+    watek = new QThread();
+    connect(watek, SIGNAL(started()), this, SLOT(tworzNowaPopulacje()));
+    moveToThread(watek);
+
+    mux = new QMutex();
+    mux->lock();
+
+    this->plansza = p;
+
+    watek->start();
+
+    qDebug() << "nowaPopulacja.size() == " << nowaPopulacja->size();
+
+    for (int i = 0; i < nowaPopulacja->size(); ++i)
+        osobniki.push_back((*nowaPopulacja)[i]);
 }
 
 void Populacja::tworzSekwencje()

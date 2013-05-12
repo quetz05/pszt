@@ -30,6 +30,7 @@ public slots:
     void generujPlansze();
     void graj();
     void symuluj();
+    void symuluj2();
     void nastepna();
     void tabela();
 

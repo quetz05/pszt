@@ -20,7 +20,7 @@ class Populacja : public QObject
     Q_OBJECT
 public:
     Populacja(std::vector <Planeta*>*p);
-    Populacja(vector <Kometa*> nowaPopulacja);
+    Populacja(vector <Kometa*> *nowaPopulacja, std::vector<Planeta *> * p);
 
     //początkowi osobnicy populacji
     vector <Kometa*> osobniki;
@@ -33,6 +33,7 @@ public:
     void ustawCzasDocelowy(int czas) { czasDocelowy = czas; }
 
     void generujPierwsza();
+    void ocenPierwsza();
 
     /**
      * @brief oceniaj funkcja oceniajaca potomkow

@@ -10,6 +10,7 @@
 #include <QPlainTextEdit>
 #include <QDialogButtonBox>
 #include "zestawienie.h"
+#include "algorytm2.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->guzikNastepna, SIGNAL(clicked()), this, SLOT(nastepna()));
     connect(ui->guzikTabela, SIGNAL(clicked()), this, SLOT(tabela()));
     connect(ui->czasPole, SIGNAL(editingFinished()), this, SLOT(ustawCzas()));
+    connect(ui->guzikSymuluj2, SIGNAL(clicked()), this, SLOT(symuluj2()));
 
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
@@ -49,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->guzikSymuluj->setEnabled(false);
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
+    ui->guzikSymuluj2->setEnabled(false);
 
     ui->czasPole->setText("30");
 
@@ -116,6 +119,7 @@ void MainWindow::generujPlansze()
     }
 
     ui->guzikSymuluj->setEnabled(true);
+    ui->guzikSymuluj2->setEnabled(true);
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
 
@@ -166,6 +170,22 @@ void MainWindow::symuluj()
 
     pop->generujPierwsza();
 
+}
+
+void MainWindow::symuluj2()
+{
+    if (pop)
+        delete pop;
+
+    pop = new Populacja2(&planety);
+    connect(pop, SIGNAL(gotowe()), this, SLOT(narysuj()));
+    connect(this, SIGNAL(next()), pop, SLOT(dzialaj()));
+    connect(pop, SIGNAL(nadajWiadomosc(ProstaWiadomosc)), this, SLOT(odbierzProsta(ProstaWiadomosc)));
+
+    ui->guzikNastepna->setEnabled(true);
+    ui->guzikTabela->setEnabled(true);
+
+    pop->generujPierwsza();
 }
 
 void MainWindow::nastepna()
@@ -320,5 +340,6 @@ void MainWindow::ustawGuziki(bool enable)
     ui->guzikNastepna->setEnabled(enable);
     ui->guzikGeneruj->setEnabled(enable);
     ui->guzikSymuluj->setEnabled(enable);
+    ui->guzikSymuluj2->setEnabled(enable);
     ui->guzikTabela->setEnabled(enable);
 }

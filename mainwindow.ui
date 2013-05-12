@@ -348,7 +348,14 @@
        <item>
         <widget class="QPushButton" name="guzikSymuluj">
          <property name="text">
-          <string>Symuluj</string>
+          <string>Symuluj (uśrednianie zarodków)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="guzikSymuluj2">
+         <property name="text">
+          <string>Symuluj (interpolacja zarodków)</string>
          </property>
         </widget>
        </item>
