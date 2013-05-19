@@ -5,7 +5,7 @@
 
 typedef enum
 {
-    rusz, zakonczyl, sekwencja, krzyzuj, mutuj, tworz, ocena
+    rusz, zakonczyl, zakonczylGrac, sekwencja, krzyzuj, mutuj, tworz, ocena
 } TYP_WIADOMOSCI;
 
 typedef struct ProstaWiadomosc {

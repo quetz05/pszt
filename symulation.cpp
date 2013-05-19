@@ -7,7 +7,7 @@
 
 #define G 6.67384
 
-long int Symulation::maxCzas = 30;
+long int Symulation::maxCzas = 1000;
 
 using namespace std;
 
@@ -96,7 +96,7 @@ bool Symulation::krokSymulacji(double dt, Kometa *k)
     //pozycje ustawiamy na koncu jak wiemy juz gdzie ma leciec czy nie
     Vector2 nowaPozycja = k->zwrocKierunek() * dt + k->zwrocSrodek();
 
-    k->czasZycia+=dt;
+    k->czasZycia += dt;
 
 
     if (interaktywne)
@@ -116,11 +116,6 @@ void Symulation::usunPlanety()
 {
     planety.clear();
 }
-
-//void Symulation::start()
-//{
-//    watek->start();
-//}
 
 bool Symulation::czyzakonczony()
 {
@@ -148,10 +143,7 @@ void Symulation::run()
     if (!interaktywne) {
         gracz->dodajOstatni();
         emit powiadom(gracz, Wiadomosc(0, 0, zakonczyl));
+    } else {
+        emit powiadom(gracz, Wiadomosc(couter, 0, zakonczylGrac));
     }
 }
-
-//void Symulation::zakonczony()
-//{
-//    czakonczony = true;
-//}

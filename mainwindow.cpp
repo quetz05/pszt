@@ -52,8 +52,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
     ui->guzikSymuluj2->setEnabled(false);
+    ui->guzikGraj->setEnabled(false);
 
-    ui->czasPole->setText("30");
+    ui->czasPole->setText("1000");
+    ui->czasLabel->setText("Podaj docelowy czas życia ( " + QString::number(MIN_TIME) +
+                           " - " + QString::number(MAX_TIME) + " ) :");
 
     scena = new QGraphicsScene(0, 0, 800, 600);
     ui->rysownik->setScene(scena);
@@ -89,7 +92,7 @@ void MainWindow::ustawLiczbeObrotow(int wartosc)
 
 void MainWindow::ustawCzas()
 {
-    QIntValidator *valid = new QIntValidator(10, MAX_TIME);
+    QIntValidator *valid = new QIntValidator(MIN_TIME, MAX_TIME);
     QString text = ui->czasPole->text();
 
     int pos = 0;
@@ -99,10 +102,13 @@ void MainWindow::ustawCzas()
     } else {
         QMessageBox wiadomosc;
         wiadomosc.setWindowTitle("Błąd!");
-        wiadomosc.setText("Podj wartość liczbową z zakresu 10 - " + QString::number(MAX_TIME) + " !");
+        wiadomosc.setText("Podj wartość liczbową z zakresu " + QString::number(MIN_TIME) +
+                          " - " + QString::number(MAX_TIME) + " !");
         wiadomosc.addButton(QMessageBox::Ok);
         wiadomosc.setIcon(QMessageBox::Warning);
         wiadomosc.exec();
+
+        ui->czasPole->setText(QString::number(Symulation::maxCzas));
     }
 }
 
@@ -122,6 +128,7 @@ void MainWindow::generujPlansze()
     ui->guzikSymuluj2->setEnabled(true);
     ui->guzikNastepna->setEnabled(false);
     ui->guzikTabela->setEnabled(false);
+    ui->guzikGraj->setEnabled(true);
 
     scena->clear();
     scena->update(0, 0, 800, 600);
@@ -267,14 +274,31 @@ void MainWindow::narysuj()
 void MainWindow::odbierzWiadomosc(Kometa *naCzym, Wiadomosc wiad)
 {
     switch (wiad.typ) {
-        case rusz :
-        naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
-        scena->update(0, 0, 800, 600);
-                    break;
-    case zakonczyl :
-        narysuj();
-        ustawGuziki(true);
-                    break;
+        case rusz : {
+            naCzym->ustawPozycje(Vector2(wiad.x, wiad.y)); break;
+            scena->update(0, 0, 800, 600);
+        } break;
+
+        case zakonczyl: {
+            narysuj();
+            ustawGuziki(true);
+        } break;
+
+        case zakonczylGrac: {
+
+            ui->guzikGeneruj->setEnabled(true);
+            ui->guzikSymuluj->setEnabled(true);
+            ui->guzikSymuluj2->setEnabled(true);
+            ui->guzikGraj->setEnabled(true);
+
+            QMessageBox wiadomosc;
+            wiadomosc.setWindowTitle("Koniec!");
+            wiadomosc.setText("Twój wynik to : " + QString::number(wiad.x));
+            wiadomosc.addButton(QMessageBox::Ok);
+            wiadomosc.setIcon(QMessageBox::Information);
+            wiadomosc.exec();
+
+        } break;
     }
 }
 
@@ -299,6 +323,8 @@ void MainWindow::odbierzProsta(ProstaWiadomosc wiad)
 
 void MainWindow::graj()
 {
+    ustawGuziki(false);
+
     QList<QGraphicsItem*> lista = scena->items();
 
     for (int i = 0; i < lista.size(); ++i) {
@@ -313,9 +339,6 @@ void MainWindow::graj()
 
     ui->rysownik->ustawTrybGry(true);
     ui->rysownik->przypiszGracz(gracz);
-
-    if (sim)
-        delete sim;
 
     sim = new Symulation(0);
     sim->ustawInteraktywne(true);
@@ -342,4 +365,5 @@ void MainWindow::ustawGuziki(bool enable)
     ui->guzikSymuluj->setEnabled(enable);
     ui->guzikSymuluj2->setEnabled(enable);
     ui->guzikTabela->setEnabled(enable);
+    ui->guzikGraj->setEnabled(enable);
 }

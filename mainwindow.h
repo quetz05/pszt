@@ -10,7 +10,8 @@
 #include "zestawienie.h"
 #include "replay.h"
 
-#define MAX_TIME 5000
+#define MIN_TIME 500
+#define MAX_TIME 10000
 
 namespace Ui {
     class MainWindow;
@@ -61,9 +62,6 @@ private:
 
     Symulation *sim;
     Kometa *gracz;
-
-    //Symulation *sim[NUM_THREADS];
-    //Kometa *gracz[NUM_THREADS];
 
     Zestawienie *zest;
 

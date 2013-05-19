@@ -17,7 +17,7 @@ Planeta::Planeta(Vector2 vec, double m)
     srodek.y = vec.y;
     masa = m;
     promien = 5 + 0.5*masa;
-    setToolTip(QString("Masa planety = ").append(QString::number(masa)).append(" x 10 <sup>24</sup> kg"));
+    setToolTip(QString("Masa planety = ").append(QString::number(m)).append(" x 10 <sup>24</sup> kg"));
     this->setRect(boundingRect());
 }
 
