@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->czasPole, SIGNAL(editingFinished()), this, SLOT(ustawCzas()));
     connect(ui->guzikSymuluj2, SIGNAL(clicked()), this, SLOT(symuluj2()));
 
+    ui->rysownik->setRenderHint(QPainter::Antialiasing, true);
+
     this->setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
 
