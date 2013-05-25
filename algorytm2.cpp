@@ -17,8 +17,8 @@ void Populacja2::krzyzowanie()
 
     for(unsigned int i = 0; i < (sekwencjaRodzicow.size()-1); i++)
     {
-        kier = a*(sekwencjaRodzicow[i]->zwrocKierunek())+(1-a)*(sekwencjaRodzicow[i+1]->zwrocKierunek());
-        sr = a*(sekwencjaRodzicow[i]->zwrocSrodek())+(1-a)*(sekwencjaRodzicow[i+1]->zwrocSrodek());
+        kier = (sekwencjaRodzicow[i]->zwrocKierunek())*a+(sekwencjaRodzicow[i+1]->zwrocKierunek())*(1-a);
+        sr = (sekwencjaRodzicow[i]->zwrocSrodek())*a+(sekwencjaRodzicow[i+1]->zwrocSrodek())*(1-a);
 
         zarodki.push_back(new Kometa(sr, kier));
 

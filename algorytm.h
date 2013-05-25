@@ -52,7 +52,7 @@ signals:
     void gotowe();
     void nadajWiadomosc(ProstaWiadomosc wiad);
 
-private:
+protected:
 
     QThread *watek;
     QMutex *mux;
