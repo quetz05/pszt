@@ -222,6 +222,9 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     Symulation** sim = new Symulation* [k->size()];
 
     for (unsigned int i = 0; i <k->size(); ++i) {
+
+
+
         sim[i] = new Symulation(i);
         sim[i]->dodajGracza(k->at(i));
         sim[i]->ustawInteraktywne(false);
@@ -231,10 +234,16 @@ void Populacja::oceniaj(vector<Kometa *> *k)
     }
 
     for (unsigned int i = 0; i <k->size(); ++i) {
+
+        //tutaj
+
         QThreadPool::globalInstance()->start(sim[i]);
     }
 
     for (unsigned int i = 0; i <k->size(); ++i) {
+
+        //i tutaj
+
         while(!sim[i]->czyzakonczony())
             this->thread()->msleep(100);
     }
