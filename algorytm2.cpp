@@ -32,18 +32,7 @@ void Populacja2::tworzNowaPopulacje()
 {
 
     while (1) {
-        qDebug() << "tworzNowaPopulacje :: attempting lock";
         mux->lock();
-        qDebug() << "tworzNowaPopulacje :: lock acquired";
-
-        qDebug() << "=============================";
-        qDebug() << "licznosci wektorow PRZED ::";
-        qDebug() << "potomki == " << potomki.size();
-        qDebug() << "osobniki == " << osobniki.size();
-        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
-        qDebug() << "zarodki == " << zarodki.size();
-        qDebug() << "rozklady == " << rozkladyZarodkow.size();
-        qDebug() << "=============================";
 
         potomki.clear();
         sekwencjaRodzicow.clear();
@@ -59,16 +48,6 @@ void Populacja2::tworzNowaPopulacje()
         emit nadajWiadomosc(ProstaWiadomosc(tworz));
         this->tworzNowychOsobnikow();
         emit nadajWiadomosc(ProstaWiadomosc(ocena));
-
-        qDebug() << "=============================";
-        qDebug() << "licznosci wektorow PO ::";
-        qDebug() << "potomki == " << potomki.size();
-        qDebug() << "osobniki == " << osobniki.size();
-        qDebug() << "sekwencja rodzicow == " << sekwencjaRodzicow.size();
-        qDebug() << "zarodki == " << zarodki.size();
-        qDebug() << "rozklady == " << rozkladyZarodkow.size();
-        qDebug() << "=============================";
-
 
         oceniaj(&potomki);
 
@@ -101,8 +80,4 @@ void Populacja2::tworzNowaPopulacje()
 
         //mux->unlock();
     }
-
-
-
-
 }

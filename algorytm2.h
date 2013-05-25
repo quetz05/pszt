@@ -1,7 +1,7 @@
 #ifndef ALGORYTM2_H
 #define ALGORYTM2_H
 
-#include "algorytm2.h"
+#include "algorytm.h"
 
 class Populacja2 : public Populacja
 {
