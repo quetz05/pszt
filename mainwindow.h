@@ -6,7 +6,7 @@
 #include "kometascene.h"
 #include "symulation.h"
 #include "wiadomosc.h"
-#include "algorytm.h"
+#include "populacja.h"
 #include "zestawienie.h"
 #include "replay.h"
 

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "kometa.h"
-#include "algorytm.h"
+#include "populacja.h"
 #include <QGraphicsScene>
 
 using namespace std;

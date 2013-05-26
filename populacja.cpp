@@ -1,4 +1,4 @@
-#include "algorytm.h"
+#include "populacja.h"
 #include <QGlobal.h>
 #include <qmath.h>
 #include <time.h>

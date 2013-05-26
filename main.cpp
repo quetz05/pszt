@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "algorytm.h"
-#include "algorytm2.h"
+#include "populacja.h"
+#include "populacja2.h"
 #include <iostream>
 #include <ctime>
 

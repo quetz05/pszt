@@ -10,7 +10,7 @@
 #include <QPlainTextEdit>
 #include <QDialogButtonBox>
 #include "zestawienie.h"
-#include "algorytm2.h"
+#include "populacja2.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)

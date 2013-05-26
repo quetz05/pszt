@@ -1,5 +1,5 @@
-#ifndef ALGORYTM2_H
-#define ALGORYTM2_H
+#ifndef POPULACJA2_H
+#define POPULACJA2_H
 
 #include "algorytm.h"
 

@@ -18,23 +18,23 @@ SOURCES += main.cpp\
     planeta.cpp \
     kometa.cpp \
     vector.cpp \
-    algorytm.cpp \
     kometascene.cpp \
     zestawienie.cpp \
     replay.cpp \
-    algorytm2.cpp
+    populacja2.cpp \
+    populacja.cpp
 
 HEADERS  += mainwindow.h \
     planeta.h \
     vector.h \
     symulation.h \
     kometa.h \
-    algorytm.h \
     kometascene.h \
     wiadomosc.h \
     zestawienie.h \
     replay.h \
-    algorytm2.h
+    populacja2.h \
+    populacja.h
 
 FORMS += \
     mainwindow.ui \

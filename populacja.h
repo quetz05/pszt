@@ -1,5 +1,5 @@
-#ifndef ALGORYTM_H
-#define ALGORYTM_H
+#ifndef POPULACJA_H
+#define POPULACJA_H
 #include <cstdlib>
 #include "kometa.h"
 #include <random>
